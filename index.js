@@ -14,5 +14,5 @@ client.on('messageCreate', message => {
 });
 
 // Gebruik de token uit de omgeving, niet hardcoderen!
-client.login(process.env.TOKEN);
+client.login(process.env.MTM3MzkxNTYwNDgyNTgwNDg1MA.GWQcuf.gShFKCC4-wENcc-un5JCJEdQf4fWa9x_nhaHyw);
 
