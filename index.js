@@ -61,6 +61,7 @@ client.on('messageCreate', async (message) => {
       await message.guild.members.unban(userId);
       message.channel.send(`Gebruiker met ID ${userId} is unbanned.`);
     } catch (error) {
+      console.error(error); // logt de fout als die er is
       message.reply('Kan deze gebruiker niet unbannen of is niet verbannen.');
     }
   }
