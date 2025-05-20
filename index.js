@@ -86,3 +86,5 @@ client.on('messageCreate', async (message) => {
 
 client.login(process.env.TOKEN);
 
+client.on('error', console.error);
+process.on('unhandledRejection', console.error);
