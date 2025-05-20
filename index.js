@@ -51,21 +51,30 @@ client.on('messageCreate', async (message) => {
     message.channel.send(`${user.user.tag} is verbannen. Reden: ${reason}`);
   }
 
-  else if (command === 'unban') {
-    if (!message.member.permissions.has(PermissionsBitField.Flags.BanMembers))
-      return message.reply('Je hebt geen toestemming om te unbannen.');
-    const userId = args[0];
-    if (!userId) return message.reply('Geef een gebruikers-ID op.');
+else if (command === 'unban') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.BanMembers))
+    return message.reply('Je hebt geen toestemming om te unbannen.');
 
-    try {
-      await message.guild.members.unban(userId);
-      message.channel.send(`Gebruiker met ID ${userId} is unbanned.`);
-    } catch (error) {
-      console.error(error); // logt de fout als die er is
-      message.reply('Kan deze gebruiker niet unbannen of is niet verbannen.');
+  const userId = args[0];
+  if (!userId) return message.reply('Geef een gebruikers-ID op.');
+
+  try {
+    // Eerst de lijst van gebande gebruikers ophalen
+    const bans = await message.guild.bans.fetch();
+    const bannedUser = bans.get(userId);
+
+    if (!bannedUser) {
+      return message.reply('Deze gebruiker is niet geband of het ID is ongeldig.');
     }
-  }
 
+    // Als gebruiker geband is → unban
+    await message.guild.members.unban(userId);
+    message.channel.send(`Gebruiker met ID ${userId} is unbanned.`);
+  } catch (error) {
+    console.error(error);
+    message.reply('Er is een fout opgetreden bij het unbannen.');
+  }
+}
   else if (command === 'clear') {
     const amount = parseInt(args[0]);
     if (!message.member.permissions.has(PermissionsBitField.Flags.ManageMessages))
