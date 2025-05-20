@@ -8,8 +8,8 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', message => {
-    if (message.content === '!hallo') {
-        message.channel.send('Hoi daar!');
+    if (message.content === '!hello') {
+        message.channel.send('Hey there!');
     }
 });
 
