@@ -106,6 +106,34 @@ else if (command === 'unban') {
 
     message.channel.send({ embeds: [helpEmbed] });
   }
+
+  else if (command === 'bans') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
+    return message.reply('Je hebt geen toestemming om bans te bekijken.');
+  }
+
+  try {
+    const bans = await message.guild.bans.fetch();
+
+    if (bans.size === 0) {
+      return message.channel.send('Er zijn momenteel geen gebande gebruikers.');
+    }
+
+    const banList = bans.map(ban => `${ban.user.tag} (ID: ${ban.user.id})`).join('\n');
+
+    const embed = new EmbedBuilder()
+      .setTitle('Gebande gebruikers')
+      .setDescription(banList.length > 4000 ? 'Te veel bans om weer te geven.' : banList)
+      .setColor(0xff0000)
+      .setTimestamp();
+
+    message.channel.send({ embeds: [embed] });
+
+  } catch (error) {
+    console.error(error);
+    message.reply('Er is iets misgegaan bij het ophalen van de bans.');
+  }
+}
 });
 
 client.login(process.env.TOKEN);
