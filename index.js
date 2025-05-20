@@ -99,6 +99,7 @@ else if (command === 'unban') {
         { name: '!ban @gebruiker [reden]', value: 'Ban een gebruiker permanent.' },
         { name: '!unban gebruikers-ID', value: 'Unban een gebruiker met hun ID.' },
         { name: '!clear aantal', value: 'Verwijder meerdere berichten tegelijk (1-100).' },
+        { name: '!embed [bericht]', value: 'Verstuur het opgegeven bericht als een embed.' },
         { name: '!help', value: 'Toon dit helpbericht.' }
       )
       .setFooter({ text: 'Just JanCarlos Bot', iconURL: client.user.displayAvatarURL() })
@@ -133,6 +134,19 @@ else if (command === 'unban') {
     console.error(error);
     message.reply('Er is iets misgegaan bij het ophalen van de bans.');
   }
+}
+
+  else if (command === 'embed') {
+  const tekst = args.join(' ');
+  if (!tekst) return message.reply('Geef een bericht op dat je als embed wilt verzenden.');
+
+  const embed = new EmbedBuilder()
+    .setDescription(tekst)
+    .setColor(0x3498db) // Je kunt hier een andere kleurcode gebruiken
+    .setFooter({ text: `Embed verzonden door ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
+    .setTimestamp();
+
+  message.channel.send({ embeds: [embed] });
 }
 });
 
