@@ -90,7 +90,7 @@ else if (command === 'unban') {
 
   else if (command === 'help') {
     const helpEmbed = new EmbedBuilder()
-      .setColor(0xff4f2e)
+      .setColor(0xff5c39)
       .setTitle('📜 Hulp - Beschikbare Commands')
       .setDescription('Hier zijn de commando\'s die je kunt gebruiken met deze bot:')
       .addFields(
@@ -125,7 +125,7 @@ else if (command === 'unban') {
     const embed = new EmbedBuilder()
       .setTitle('Gebande gebruikers')
       .setDescription(banList.length > 4000 ? 'Te veel bans om weer te geven.' : banList)
-      .setColor(0xff4f2e)
+      .setColor(0xff5c39)
       .setTimestamp();
 
     message.channel.send({ embeds: [embed] });
@@ -146,7 +146,7 @@ else if (command === 'embed') {
   // Maak en stuur de embed
   const embed = new EmbedBuilder()
     .setDescription(embedMessage)
-    .setColor(0xff4f2e)
+    .setColor(0xff5c39)
     .setFooter({ text: `Embed gemaakt door ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
     .setTimestamp();
 
