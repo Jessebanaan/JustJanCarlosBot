@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, PermissionsBitField } = require('discord.js');
+const { Client, GatewayIntentBits, PermissionsBitField, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
   intents: [
@@ -19,7 +19,6 @@ client.on('messageCreate', async (message) => {
   const args = message.content.slice(1).trim().split(/ +/);
   const command = args.shift().toLowerCase();
 
-  // !warn @user reden
   if (command === 'warn') {
     const user = message.mentions.members.first();
     const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
@@ -30,7 +29,6 @@ client.on('messageCreate', async (message) => {
     message.channel.send(`${user} is gewaarschuwd. Reden: ${reason}`);
   }
 
-  // !kick @user reden
   else if (command === 'kick') {
     const user = message.mentions.members.first();
     const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
@@ -42,7 +40,6 @@ client.on('messageCreate', async (message) => {
     message.channel.send(`${user.user.tag} is gekickt. Reden: ${reason}`);
   }
 
-  // !ban @user reden
   else if (command === 'ban') {
     const user = message.mentions.members.first();
     const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
@@ -54,7 +51,6 @@ client.on('messageCreate', async (message) => {
     message.channel.send(`${user.user.tag} is verbannen. Reden: ${reason}`);
   }
 
-  // !unban gebruikers-id
   else if (command === 'unban') {
     if (!message.member.permissions.has(PermissionsBitField.Flags.BanMembers))
       return message.reply('Je hebt geen toestemming om te unbannen.');
@@ -69,7 +65,6 @@ client.on('messageCreate', async (message) => {
     }
   }
 
-  // !clear aantal
   else if (command === 'clear') {
     const amount = parseInt(args[0]);
     if (!message.member.permissions.has(PermissionsBitField.Flags.ManageMessages))
@@ -82,9 +77,30 @@ client.on('messageCreate', async (message) => {
       setTimeout(() => msg.delete(), 3000);
     });
   }
+
+  else if (command === 'help') {
+    const helpEmbed = new EmbedBuilder()
+      .setColor(0x00AE86)
+      .setTitle('📜 Hulp - Beschikbare Commands')
+      .setDescription('Hier zijn de commando\'s die je kunt gebruiken met deze bot:')
+      .addFields(
+        { name: '!warn @gebruiker [reden]', value: 'Waarschuw een gebruiker.' },
+        { name: '!kick @gebruiker [reden]', value: 'Kick een gebruiker uit de server.' },
+        { name: '!ban @gebruiker [reden]', value: 'Ban een gebruiker permanent.' },
+        { name: '!unban gebruikers-ID', value: 'Unban een gebruiker met hun ID.' },
+        { name: '!clear aantal', value: 'Verwijder meerdere berichten tegelijk (1-100).' },
+        { name: '!help', value: 'Toon dit helpbericht.' }
+      )
+      .setFooter({ text: 'Just JanCarlos Bot', iconURL: client.user.displayAvatarURL() })
+      .setTimestamp();
+
+    message.channel.send({ embeds: [helpEmbed] });
+  }
 });
 
 client.login(process.env.TOKEN);
 
 client.on('error', console.error);
 process.on('unhandledRejection', console.error);
+
+
