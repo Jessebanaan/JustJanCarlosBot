@@ -125,7 +125,7 @@ else if (command === 'unban') {
     const embed = new EmbedBuilder()
       .setTitle('Gebande gebruikers')
       .setDescription(banList.length > 4000 ? 'Te veel bans om weer te geven.' : banList)
-      .setColor(0xff0000)
+      .setColor(0xffa500)
       .setTimestamp();
 
     message.channel.send({ embeds: [embed] });
@@ -146,7 +146,7 @@ else if (command === 'embed') {
   // Maak en stuur de embed
   const embed = new EmbedBuilder()
     .setDescription(embedMessage)
-    .setColor(0x00AE86)
+    .setColor(0xffa500)
     .setFooter({ text: `Embed gemaakt door ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
     .setTimestamp();
 
