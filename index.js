@@ -136,18 +136,23 @@ else if (command === 'unban') {
   }
 }
 
-  else if (command === 'embed') {
-  const tekst = args.join(' ');
-  if (!tekst) return message.reply('Geef een bericht op dat je als embed wilt verzenden.');
+else if (command === 'embed') {
+  const embedMessage = args.join(' ');
+  if (!embedMessage) return message.reply('Geef een bericht op om in een embed te plaatsen.');
 
+  // Verwijder het originele bericht
+  await message.delete().catch(() => {});
+
+  // Maak en stuur de embed
   const embed = new EmbedBuilder()
-    .setDescription(tekst)
-    .setColor(0x3498db) // Je kunt hier een andere kleurcode gebruiken
-    .setFooter({ text: `Embed verzonden door ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
+    .setDescription(embedMessage)
+    .setColor(0x00AE86)
+    .setFooter({ text: `Embed gemaakt door ${message.author.tag}`, iconURL: message.author.displayAvatarURL() })
     .setTimestamp();
 
   message.channel.send({ embeds: [embed] });
 }
+  
 });
 
 client.login(process.env.TOKEN);
