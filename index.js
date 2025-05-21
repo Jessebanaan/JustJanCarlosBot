@@ -234,40 +234,6 @@ client.on('messageCreate', async (message) => {
     ],
   });
 
-else if (command === 'close') {
-  const channel = message.channel;
-
-  // Controleer of het een ticketkanaal is
-  if (!channel.name.startsWith('ticket-')) {
-    return message.reply('Dit commando kan alleen in een ticketkanaal gebruikt worden.');
-  }
-
-  const confirm = await message.reply('Weet je zeker dat je dit ticket wilt sluiten? Typ `!bevestig` binnen 15 seconden.');
-
-  // Wacht op bevestiging
-  const filter = m => m.author.id === message.author.id && m.content.toLowerCase() === '!bevestig';
-  try {
-    await channel.awaitMessages({ filter, max: 1, time: 15000, errors: ['time'] });
-    
-    await channel.send('🎟️ Ticket wordt gesloten...');
-    
-    const embed = new EmbedBuilder()
-      .setTitle('🎟️ Ticket gesloten')
-      .addFields(
-        { name: 'Kanaal', value: channel.name, inline: true },
-        { name: 'Gesloten door', value: message.author.tag, inline: true }
-      )
-      .setColor(0xff0000)
-      .setTimestamp();
-
-    await logToChannel(message.guild, embed);
-    
-    setTimeout(() => channel.delete().catch(console.error), 3000);
-  } catch (error) {
-    confirm.edit('❌ Ticket sluiten geannuleerd of geen bevestiging ontvangen.');
-  }
-}
-
 
   const embed = new EmbedBuilder()
     .setTitle('🎫 Nieuw ticket')
