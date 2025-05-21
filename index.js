@@ -9,7 +9,7 @@ client.on('interactionCreate', async interaction => {
     if (!member.permissions.has(PermissionFlagsBits.ManageMessages))
       return interaction.reply({ content: 'Geen toestemming.', ephemeral: true });
 
-    interaction.reply(${user} is gewaarschuwd. Reden: ${reason});
+    interaction.reply(`${user} is gewaarschuwd. Reden: ${reason}`);
   }
 
   else if (commandName === 'kick') {
@@ -18,7 +18,7 @@ client.on('interactionCreate', async interaction => {
     if (!user.kickable) return interaction.reply('Kan deze gebruiker niet kicken.');
 
     await user.kick(reason);
-    interaction.reply(${user.user.tag} is gekickt. Reden: ${reason});
+    interaction.reply(`${user.user.tag} is gekickt. Reden: ${reason}`);
   }
 
   else if (commandName === 'ban') {
@@ -27,7 +27,7 @@ client.on('interactionCreate', async interaction => {
     if (!user.bannable) return interaction.reply('Kan deze gebruiker niet bannen.');
 
     await user.ban({ reason });
-    interaction.reply(${user.user.tag} is verbannen. Reden: ${reason});
+    interaction.reply(`${user.user.tag} is verbannen. Reden: ${reason}`);
   }
 
   else if (commandName === 'unban') {
@@ -37,7 +37,7 @@ client.on('interactionCreate', async interaction => {
       const bannedUser = bans.get(userId);
       if (!bannedUser) return interaction.reply('Deze gebruiker is niet geband.');
       await guild.members.unban(userId);
-      interaction.reply(Gebruiker met ID ${userId} is unbanned.);
+      interaction.reply(`Gebruiker met ID ${userId} is unbanned.`);
     } catch (err) {
       console.error(err);
       interaction.reply('Fout bij unban.');
@@ -48,13 +48,13 @@ client.on('interactionCreate', async interaction => {
     const amount = options.getInteger('aantal');
     if (amount < 1 || amount > 100) return interaction.reply('Aantal moet tussen 1 en 100 zijn.');
     await channel.bulkDelete(amount, true);
-    interaction.reply(${amount} berichten verwijderd.);
+    interaction.reply(`${amount} berichten verwijderd.`);
   }
 
   else if (commandName === 'bans') {
     const bans = await guild.bans.fetch();
     if (bans.size === 0) return interaction.reply('Geen gebande gebruikers.');
-    const list = bans.map(ban => ${ban.user.tag} (ID: ${ban.user.id})).join('\n');
+    const list = bans.map(ban => `${ban.user.tag} (ID: ${ban.user.id})`).join('\n');
     interaction.reply(list.length > 2000 ? 'Te veel om te tonen.' : list);
   }
 
