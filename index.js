@@ -128,6 +128,28 @@ client.on('messageCreate', async message => {
     message.channel.send({ embeds: [embed] });
   }
 
+      else if (command === 'ping') {
+  const msg = await message.channel.send('🏓 Pingen...');
+  const latency = msg.createdTimestamp - message.createdTimestamp;
+  msg.edit(`🏓 Pong! Latency: ${latency}ms | API: ${Math.round(client.ws.ping)}ms`);
+}
+
+else if (command === 'poll') {
+  const vraag = args.join(' ');
+  if (!vraag) return message.reply('❌ Je moet een vraag opgeven. Gebruik: `!poll Wat vind je van pizza?`');
+
+  const embed = new EmbedBuilder()
+    .setTitle('📊 Nieuwe Poll')
+    .setDescription(vraag)
+    .setColor(0x00bfff)
+    .setFooter({ text: `Poll gestart door ${message.author.tag}` })
+    .setTimestamp();
+
+  const pollMsg = await message.channel.send({ embeds: [embed] });
+  await pollMsg.react('👍');
+  await pollMsg.react('👎');
+}
+
   else if (command === 'help') {
     const embed = new EmbedBuilder()
       .setTitle('📜 Hulp - Commands')
@@ -139,7 +161,10 @@ client.on('messageCreate', async message => {
         { name: '!clear [aantal]', value: 'Verwijder berichten (1-100).' },
         { name: '!bans', value: 'Toon gebande gebruikers.' },
         { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
-        { name: '!help', value: 'Toon dit hulpoverzicht.' }
+        { name: '!help', value: 'Toon dit hulpoverzicht.' },
+        { name: '!info', value: 'Toon informatie over de bot.' },
+        { name: '!ping', value: 'Laat zien hoe snel de bot reageert.' },
+        { name: '!poll', value: 'Start een poll met 👍/👎 stemmen.' }
       )
       .setColor(0xff5733)
       .setTimestamp();
