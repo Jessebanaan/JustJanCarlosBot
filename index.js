@@ -1,6 +1,15 @@
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 require('dotenv').config();
 
+const LOG_CHANNEL_NAME = 'logs'; // pas aan indien nodig
+
+async function logToChannel(guild, embed) {
+  const logChannel = guild.channels.cache.find(c => c.name === LOG_CHANNEL_NAME && c.isTextBased());
+  if (logChannel) {
+    logChannel.send({ embeds: [embed] });
+  }
+}
+
 const token = process.env.TOKEN;
 const prefix = '!';
 
@@ -40,6 +49,18 @@ client.on('messageCreate', async message => {
       return message.reply('Je hebt geen permissie om te waarschuwen.');
 
     message.channel.send(`${member} is gewaarschuwd. Reden: ${reason}`);
+
+    const logEmbed = new EmbedBuilder()
+  .setTitle('⚠️ Waarschuwing')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xffcc00)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
   }
 
   else if (command === 'kick') {
@@ -52,6 +73,18 @@ client.on('messageCreate', async message => {
 
     await member.kick(reason);
     message.channel.send(`${member.user.tag} is gekickt. Reden: ${reason}`);
+
+    const logEmbed = new EmbedBuilder()
+  .setTitle('👢 Gebruiker gekickt')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
   }
 
   else if (command === 'ban') {
@@ -64,6 +97,18 @@ client.on('messageCreate', async message => {
 
     await member.ban({ reason });
     message.channel.send(`${member.user.tag} is verbannen. Reden: ${reason}`);
+
+    const logEmbed = new EmbedBuilder()
+  .setTitle('👢 Gebruiker gebanned')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
   }
 
   else if (command === 'unban') {
@@ -75,6 +120,19 @@ client.on('messageCreate', async message => {
     try {
       await message.guild.members.unban(userId);
       message.channel.send(`Gebruiker met ID ${userId} is unbanned.`);
+
+      const logEmbed = new EmbedBuilder()
+  .setTitle('👢 Gebruiker gekickt')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
+      
     } catch (err) {
       console.error(err);
       message.reply('Fout bij unbannen. ID correct?');
@@ -90,6 +148,18 @@ client.on('messageCreate', async message => {
 
     await message.channel.bulkDelete(amount, true);
     message.channel.send(`${amount} berichten verwijderd.`).then(msg => {
+      const logEmbed = new EmbedBuilder()
+  .setTitle('Beirchten verwijderd')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
+      
       setTimeout(() => msg.delete(), 3000);
     });
   }
@@ -115,6 +185,18 @@ client.on('messageCreate', async message => {
       .setTimestamp();
 
     message.channel.send({ embeds: [embed] });
+
+    const logEmbed = new EmbedBuilder()
+  .setTitle('Embed bericht gemaakt')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
   }
 
     else if (command === 'info') {
@@ -156,6 +238,18 @@ else if (command === 'poll') {
   const pollMsg = await message.channel.send({ embeds: [embed] });
   await pollMsg.react('👍');
   await pollMsg.react('👎');
+
+  const logEmbed = new EmbedBuilder()
+  .setTitle('Poll aangemaakt')
+  .addFields(
+    { name: 'Auteur', value: `${member.user.tag}`, inline: true },
+    { name: 'Kanaal', value: `${message.author.tag}`, inline: true },
+    { name: 'Vraag', value: vraag }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
 }
   
   else if (command === 'ticket') {
@@ -189,6 +283,61 @@ else if (command === 'poll') {
 
   channel.send(`🎫 Ticket geopend door ${message.author}. Reden: ${reason}`);
   message.reply(`✅ Ticket aangemaakt: ${channel}`);
+
+                                                                 const logEmbed = new EmbedBuilder()
+  .setTitle('Ticket aangemaakt')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
+        else if (command === 'ticket') {
+  const reason = args.join(' ') || 'Geen reden opgegeven';
+
+  const supportRoleName = 'Support'; // pas dit aan naar je staff rolnaam
+  const existing = message.guild.channels.cache.find(c => c.name === `ticket-${message.author.username.toLowerCase()}`);
+  if (existing) return message.reply('Je hebt al een open ticket.');
+
+  const supportRole = message.guild.roles.cache.find(r => r.name === supportRoleName);
+  if (!supportRole) return message.reply(`De rol "${supportRoleName}" bestaat niet.`);
+
+  const channel = await message.guild.channels.create({
+    name: `ticket-${message.author.username}`,
+    type: 0, // 0 = GUILD_TEXT
+    permissionOverwrites: [
+      {
+        id: message.guild.id,
+        deny: ['ViewChannel']
+      },
+      {
+        id: message.author.id,
+        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
+      },
+      {
+        id: supportRole.id,
+        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
+      }
+    ]
+  });
+
+  channel.send(`🎫 Ticket geopend door ${message.author}. Reden: ${reason}`);
+  message.reply(`✅ Ticket aangemaakt: ${channel}`);
+
+                                                                 const logEmbed = new EmbedBuilder()
+  .setTitle('Ticket aangemaakt')
+  .addFields(
+    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
+    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
+    { name: 'Reden', value: reason }
+  )
+  .setColor(0xff0000)
+  .setTimestamp();
+logToChannel(message.guild, logEmbed);
+
 }
 
     else if (command === 'close') { // sluit de ticket
@@ -196,6 +345,26 @@ else if (command === 'poll') {
   message.channel.send('🎟️ Ticket wordt gesloten...').then(() => {
     setTimeout(() => message.channel.delete(), 3000);
   });
+}
+
+}
+
+else if (command === 'close') {
+  if (!message.channel.name.startsWith('ticket-')) return message.reply('Dit is geen ticketkanaal.');
+
+  const logEmbed = new EmbedBuilder()
+    .setTitle('🎟️ Ticket Gesloten')
+    .addFields(
+      { name: 'Kanaal', value: `${message.channel.name}`, inline: true },
+      { name: 'Gesloten door', value: `${message.author.tag}`, inline: true }
+    )
+    .setColor(0xffa500)
+    .setTimestamp();
+
+  logToChannel(message.guild, logEmbed); // stuur log voordat kanaal wordt verwijderd
+
+  message.channel.send
+
 }
 
   else if (command === 'help') {
