@@ -1,5 +1,6 @@
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const { token } = require('./config.json'); // Zorg dat je config.json een "token" bevat
+const token = process.env.TOKEN;
+
 
 const client = new Client({
   intents: [
