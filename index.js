@@ -4,6 +4,14 @@ require('dotenv').config();
 const token = process.env.TOKEN;
 const prefix = '!';
 
+function formatUptime(ms) {
+  const seconds = Math.floor((ms / 1000) % 60);
+  const minutes = Math.floor((ms / (1000 * 60)) % 60);
+  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  return `${days}d ${hours}u ${minutes}m ${seconds}s`;
+}
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
