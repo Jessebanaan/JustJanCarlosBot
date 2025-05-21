@@ -74,6 +74,68 @@ client.on('messageCreate', async (message) => {
 
       await logToChannel(message.guild, embed);
     } 
+
+      else if (command === 'kick') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+    return message.reply('Je hebt geen toestemming om leden te kicken.');
+  }
+
+  const member = message.mentions.members.first();
+  const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
+
+  if (!member) return message.reply('Geef een geldige gebruiker op om te kicken.');
+  if (!member.kickable) return message.reply('Ik kan deze gebruiker niet kicken.');
+
+  await member.kick(reason);
+  message.channel.send(`${member.user.tag} is gekickt. ✅`);
+
+  const embed = new EmbedBuilder()
+    .setTitle('👢 Lid gekickt')
+    .addFields(
+      { name: 'Gebruiker', value: member.user.tag, inline: true },
+      { name: 'Reden', value: reason, inline: true },
+      { name: 'Moderator', value: message.author.tag, inline: true }
+    )
+    .setColor(0xffa500)
+    .setTimestamp();
+
+  await logToChannel(message.guild, embed);
+}
+
+
+else if (command === 'warn') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
+    return message.reply('Je hebt geen toestemming om leden te waarschuwen.');
+  }
+
+  const member = message.mentions.members.first();
+  const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
+
+  if (!member) return message.reply('Geef een geldige gebruiker op om te waarschuwen.');
+
+  // Probeer de gebruiker te DM'en
+  try {
+    await member.send(`⚠️ Je bent gewaarschuwd in **${message.guild.name}**.\n**Reden:** ${reason}`);
+  } catch (error) {
+    message.channel.send('Kon geen DM sturen naar deze gebruiker. (DMs staan misschien uit)');
+  }
+
+  message.channel.send(`${member.user.tag} is gewaarschuwd. ⚠️`);
+
+  const embed = new EmbedBuilder()
+    .setTitle('⚠️ Waarschuwing')
+    .addFields(
+      { name: 'Gebruiker', value: member.user.tag, inline: true },
+      { name: 'Reden', value: reason, inline: true },
+      { name: 'Moderator', value: message.author.tag, inline: true }
+    )
+    .setColor(0xffff00)
+    .setTimestamp();
+
+  await logToChannel(message.guild, embed);
+}
+
+
     
     else if (command === 'clear') {
       if (!message.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
@@ -174,5 +236,27 @@ async function logToChannel(guild, embed) {
     await logChannel.send({ embeds: [embed] });
   }
 }
+
+else if (command === 'help') {
+  const embed = new EmbedBuilder()
+    .setTitle('📖 Help Menu')
+    .setDescription('Hier is een lijst met beschikbare commands:')
+    .addFields(
+      { name: '!ban @gebruiker [reden]', value: 'Verban een gebruiker.' },
+      { name: '!unban [gebruiker ID]', value: 'Unban een gebruiker.' },
+      { name: '!kick @gebruiker [reden]', value: 'Kick een gebruiker.' },
+      { name: '!warn @gebruiker [reden]', value: 'Waarschuw een gebruiker.' },
+      { name: '!clear [aantal]', value: 'Verwijder berichten.' },
+      { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
+      { name: '!poll [vraag]', value: 'Start een poll.' },
+      { name: '!ticket [reden]', value: 'Maak een ticket aan.' }
+    )
+    .setColor(0x00bfff)
+    .setFooter({ text: 'Just JanCarlos Bot' })
+    .setTimestamp();
+
+  await message.channel.send({ embeds: [embed] });
+}
+
 
 client.login(process.env.TOKEN);
