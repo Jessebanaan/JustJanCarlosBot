@@ -157,6 +157,46 @@ else if (command === 'poll') {
   await pollMsg.react('👍');
   await pollMsg.react('👎');
 }
+  
+  else if (command === 'ticket') {
+  const reason = args.join(' ') || 'Geen reden opgegeven';
+
+  const supportRoleName = 'Support'; // pas dit aan naar je staff rolnaam
+  const existing = message.guild.channels.cache.find(c => c.name === `ticket-${message.author.username.toLowerCase()}`);
+  if (existing) return message.reply('Je hebt al een open ticket.');
+
+  const supportRole = message.guild.roles.cache.find(r => r.name === supportRoleName);
+  if (!supportRole) return message.reply(`De rol "${supportRoleName}" bestaat niet.`);
+
+  const channel = await message.guild.channels.create({
+    name: `ticket-${message.author.username}`,
+    type: 0, // 0 = GUILD_TEXT
+    permissionOverwrites: [
+      {
+        id: message.guild.id,
+        deny: ['ViewChannel']
+      },
+      {
+        id: message.author.id,
+        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
+      },
+      {
+        id: supportRole.id,
+        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
+      }
+    ]
+  });
+
+  channel.send(`🎫 Ticket geopend door ${message.author}. Reden: ${reason}`);
+  message.reply(`✅ Ticket aangemaakt: ${channel}`);
+}
+
+    else if (command === 'close') { // sluit de ticket
+  if (!message.channel.name.startsWith('ticket-')) return message.reply('Dit is geen ticketkanaal.');
+  message.channel.send('🎟️ Ticket wordt gesloten...').then(() => {
+    setTimeout(() => message.channel.delete(), 3000);
+  });
+}
 
   else if (command === 'help') {
     const embed = new EmbedBuilder()
@@ -169,10 +209,12 @@ else if (command === 'poll') {
         { name: '!clear [aantal]', value: 'Verwijder berichten (1-100).' },
         { name: '!bans', value: 'Toon gebande gebruikers.' },
         { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
-        { name: '!help', value: 'Toon dit hulpoverzicht.' },
         { name: '!info', value: 'Toon informatie over de bot.' },
         { name: '!ping', value: 'Laat zien hoe snel de bot reageert.' },
-        { name: '!poll', value: 'Start een poll met 👍/👎 stemmen.' }
+        { name: '!poll', value: 'Start een poll met 👍/👎 stemmen.' },
+        { name: '!ticket [reden]', value: 'Maak een support ticket aan.' },
+        { name: '!close', value: 'Sluit het huidige ticketkanaal.' },
+        { name: '!help', value: 'Toon dit hulpoverzicht.' }
       )
       .setColor(0xff5733)
       .setTimestamp();
