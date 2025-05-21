@@ -1,3 +1,20 @@
+const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { token } = require('./config.json'); // Zorg dat je config.json een "token" bevat
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers
+  ],
+  partials: [Partials.Channel]
+});
+
+client.once('ready', () => {
+  console.log(`✅ Bot is ingelogd als ${client.user.tag}`);
+});
+
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -84,3 +101,6 @@ client.on('interactionCreate', async interaction => {
     interaction.reply({ embeds: [embed], ephemeral: true });
   }
 });
+
+client.login(token);
+
