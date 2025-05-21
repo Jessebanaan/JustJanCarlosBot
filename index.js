@@ -230,12 +230,6 @@ else if (command === 'warn') {
   }
 });
 
-async function logToChannel(guild, embed) {
-  const logChannel = guild.channels.cache.find(c => c.name === 'mod-logs' && c.isTextBased?.());
-  if (logChannel) {
-    await logChannel.send({ embeds: [embed] });
-  }
-}
 
 else if (command === 'help') {
   const embed = new EmbedBuilder()
@@ -256,6 +250,14 @@ else if (command === 'help') {
     .setTimestamp();
 
   await message.channel.send({ embeds: [embed] });
+}
+
+
+async function logToChannel(guild, embed) {
+  const logChannel = guild.channels.cache.find(c => c.name === 'mod-logs' && c.isTextBased?.());
+  if (logChannel) {
+    await logChannel.send({ embeds: [embed] });
+  }
 }
 
 
