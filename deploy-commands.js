@@ -47,6 +47,10 @@ const commands = [
         .setRequired(true)),
 
   new SlashCommandBuilder()
+  .setName('bans')
+  .setDescription('Toon een lijst met gebande gebruikers'),
+
+  new SlashCommandBuilder()
     .setName('clear')
     .setDescription('Verwijder berichten')
     .addIntegerOption(option =>
