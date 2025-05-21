@@ -295,7 +295,6 @@ logToChannel(message.guild, logEmbed);
   .setTimestamp();
 logToChannel(message.guild, logEmbed);
 
-        else if (command === 'ticket') {
   const reason = args.join(' ') || 'Geen reden opgegeven';
 
   const supportRoleName = 'Support'; // pas dit aan naar je staff rolnaam
