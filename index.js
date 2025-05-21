@@ -109,6 +109,25 @@ client.on('messageCreate', async message => {
     message.channel.send({ embeds: [embed] });
   }
 
+    else if (command === 'info') {
+    const embed = new EmbedBuilder()
+      .setTitle('ℹ️ Bot Informatie')
+      .addFields(
+        { name: 'Naam', value: `${client.user.tag}`, inline: true },
+        { name: 'ID', value: `${client.user.id}`, inline: true },
+        { name: 'Servers', value: `${client.guilds.cache.size}`, inline: true },
+        { name: 'Gebruikers', value: `${client.users.cache.size}`, inline: true },
+        { name: 'Versie', value: 'v1.0.0', inline: true },
+        { name: 'Uptime', value: formatUptime(client.uptime), inline: true }
+      )
+      .setColor(0x3498db)
+      .setThumbnail(client.user.displayAvatarURL())
+      .setFooter({ text: 'Bot door Just JanCarlos', iconURL: client.user.displayAvatarURL() })
+      .setTimestamp();
+
+    message.channel.send({ embeds: [embed] });
+  }
+
   else if (command === 'help') {
     const embed = new EmbedBuilder()
       .setTitle('📜 Hulp - Commands')
