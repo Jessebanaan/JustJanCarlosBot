@@ -252,102 +252,6 @@ logToChannel(message.guild, logEmbed);
 
 }
   
-  else if (command === 'ticket') {
-  const reason = args.join(' ') || 'Geen reden opgegeven';
-
-  const supportRoleName = 'Support'; // pas dit aan naar je staff rolnaam
-  const existing = message.guild.channels.cache.find(c => c.name === `ticket-${message.author.username.toLowerCase()}`);
-  if (existing) return message.reply('Je hebt al een open ticket.');
-
-  const supportRole = message.guild.roles.cache.find(r => r.name === supportRoleName);
-  if (!supportRole) return message.reply(`De rol "${supportRoleName}" bestaat niet.`);
-
-  const channel = await message.guild.channels.create({
-    name: `ticket-${message.author.username}`,
-    type: 0, // 0 = GUILD_TEXT
-    permissionOverwrites: [
-      {
-        id: message.guild.id,
-        deny: ['ViewChannel']
-      },
-      {
-        id: message.author.id,
-        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
-      },
-      {
-        id: supportRole.id,
-        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
-      }
-    ]
-  });
-
-  channel.send(`🎫 Ticket geopend door ${message.author}. Reden: ${reason}`);
-  message.reply(`✅ Ticket aangemaakt: ${channel}`);
-
-                                                                 const logEmbed = new EmbedBuilder()
-  .setTitle('Ticket aangemaakt')
-  .addFields(
-    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
-    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
-    { name: 'Reden', value: reason }
-  )
-  .setColor(0xff0000)
-  .setTimestamp();
-logToChannel(message.guild, logEmbed);
-
-  const reason = args.join(' ') || 'Geen reden opgegeven';
-
-  const supportRoleName = 'Support'; // pas dit aan naar je staff rolnaam
-  const existing = message.guild.channels.cache.find(c => c.name === `ticket-${message.author.username.toLowerCase()}`);
-  if (existing) return message.reply('Je hebt al een open ticket.');
-
-  const supportRole = message.guild.roles.cache.find(r => r.name === supportRoleName);
-  if (!supportRole) return message.reply(`De rol "${supportRoleName}" bestaat niet.`);
-
-  const channel = await message.guild.channels.create({
-    name: `ticket-${message.author.username}`,
-    type: 0, // 0 = GUILD_TEXT
-    permissionOverwrites: [
-      {
-        id: message.guild.id,
-        deny: ['ViewChannel']
-      },
-      {
-        id: message.author.id,
-        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
-      },
-      {
-        id: supportRole.id,
-        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
-      }
-    ]
-  });
-
-  channel.send(`🎫 Ticket geopend door ${message.author}. Reden: ${reason}`);
-  message.reply(`✅ Ticket aangemaakt: ${channel}`);
-
-                                                                 const logEmbed = new EmbedBuilder()
-  .setTitle('Ticket aangemaakt')
-  .addFields(
-    { name: 'Gebruiker', value: `${member.user.tag}`, inline: true },
-    { name: 'Moderator', value: `${message.author.tag}`, inline: true },
-    { name: 'Reden', value: reason }
-  )
-  .setColor(0xff0000)
-  .setTimestamp();
-logToChannel(message.guild, logEmbed);
-
-}
-
-    else if (command === 'close') { // sluit de ticket
-  if (!message.channel.name.startsWith('ticket-')) return message.reply('Dit is geen ticketkanaal.');
-  message.channel.send('🎟️ Ticket wordt gesloten...').then(() => {
-    setTimeout(() => message.channel.delete(), 3000);
-  });
-}
-
-}
-
 else if (command === 'close') {
   if (!message.channel.name.startsWith('ticket-')) return message.reply('Dit is geen ticketkanaal.');
 
@@ -360,11 +264,33 @@ else if (command === 'close') {
     .setColor(0xffa500)
     .setTimestamp();
 
-  logToChannel(message.guild, logEmbed); // stuur log voordat kanaal wordt verwijderd
-
-  message.channel.send
-
+  await logToChannel(message.guild, logEmbed);
+  
+  message.channel.send('🎟️ Ticket wordt gesloten...').then(() => {
+    setTimeout(() => message.channel.delete(), 3000);
+  });
 }
+
+  
+else if (command === 'close') {
+  if (!message.channel.name.startsWith('ticket-')) return message.reply('Dit is geen ticketkanaal.');
+
+  const logEmbed = new EmbedBuilder()
+    .setTitle('🎟️ Ticket Gesloten')
+    .addFields(
+      { name: 'Kanaal', value: `${message.channel.name}`, inline: true },
+      { name: 'Gesloten door', value: `${message.author.tag}`, inline: true }
+    )
+    .setColor(0xffa500)
+    .setTimestamp();
+
+  await logToChannel(message.guild, logEmbed);
+  
+  message.channel.send('🎟️ Ticket wordt gesloten...').then(() => {
+    setTimeout(() => message.channel.delete(), 3000);
+  });
+}
+
 
   else if (command === 'help') {
     const embed = new EmbedBuilder()
