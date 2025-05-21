@@ -1,5 +1,6 @@
-const { Client, GatewayIntentBits, Partials, PermissionFlagsBits } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 require('dotenv').config();
+
 const token = process.env.TOKEN;
 const prefix = '!';
 
@@ -23,48 +24,109 @@ client.on('messageCreate', async message => {
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
 
-  if (command === 'kick') {
+  if (command === 'warn') {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
-    if (!member) return message.reply('Geef een geldige gebruiker op.');
-    if (!message.member.permissions.has(PermissionFlagsBits.KickMembers))
-      return message.reply('Je hebt geen permissie om iemand te kicken.');
+    if (!member) return message.reply('Geef een gebruiker op om te waarschuwen.');
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))
+      return message.reply('Je hebt geen permissie om te waarschuwen.');
 
-    try {
-      await member.kick(reason);
-      message.channel.send(`${member.user.tag} is gekickt. Reden: ${reason}`);
-    } catch (err) {
-      console.error(err);
-      message.reply('Kon gebruiker niet kicken.');
-    }
+    message.channel.send(`${member} is gewaarschuwd. Reden: ${reason}`);
+  }
+
+  else if (command === 'kick') {
+    const member = message.mentions.members.first();
+    const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
+    if (!member) return message.reply('Geef een gebruiker op om te kicken.');
+    if (!message.member.permissions.has(PermissionFlagsBits.KickMembers))
+      return message.reply('Je hebt geen permissie om te kicken.');
+    if (!member.kickable) return message.reply('Kan deze gebruiker niet kicken.');
+
+    await member.kick(reason);
+    message.channel.send(`${member.user.tag} is gekickt. Reden: ${reason}`);
   }
 
   else if (command === 'ban') {
     const member = message.mentions.members.first();
     const reason = args.slice(1).join(' ') || 'Geen reden opgegeven';
-    if (!member) return message.reply('Geef een geldige gebruiker op.');
+    if (!member) return message.reply('Geef een gebruiker op om te bannen.');
     if (!message.member.permissions.has(PermissionFlagsBits.BanMembers))
-      return message.reply('Je hebt geen permissie om iemand te bannen.');
+      return message.reply('Je hebt geen permissie om te bannen.');
+    if (!member.bannable) return message.reply('Kan deze gebruiker niet bannen.');
+
+    await member.ban({ reason });
+    message.channel.send(`${member.user.tag} is verbannen. Reden: ${reason}`);
+  }
+
+  else if (command === 'unban') {
+    const userId = args[0];
+    if (!userId) return message.reply('Geef een gebruikers-ID op.');
+    if (!message.member.permissions.has(PermissionFlagsBits.BanMembers))
+      return message.reply('Je hebt geen permissie om te unbannen.');
 
     try {
-      await member.ban({ reason });
-      message.channel.send(`${member.user.tag} is verbannen. Reden: ${reason}`);
+      await message.guild.members.unban(userId);
+      message.channel.send(`Gebruiker met ID ${userId} is unbanned.`);
     } catch (err) {
       console.error(err);
-      message.reply('Kon gebruiker niet bannen.');
+      message.reply('Fout bij unbannen. ID correct?');
     }
   }
 
-  else if (command === 'help') {
-    message.channel.send(`
-📋 **Command lijst:**
-\`!kick @gebruiker [reden]\` - Kick een gebruiker
-\`!ban @gebruiker [reden]\` - Ban een gebruiker
-\`!help\` - Toon dit bericht
-    `);
+  else if (command === 'clear') {
+    const amount = parseInt(args[0]);
+    if (!amount || isNaN(amount) || amount < 1 || amount > 100)
+      return message.reply('Geef een getal tussen 1 en 100 op.');
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))
+      return message.reply('Je hebt geen permissie om berichten te verwijderen.');
+
+    await message.channel.bulkDelete(amount, true);
+    message.channel.send(`${amount} berichten verwijderd.`).then(msg => {
+      setTimeout(() => msg.delete(), 3000);
+    });
   }
 
-  // Voeg hier andere commands zoals !warn, !clear toe indien gewenst
+  else if (command === 'bans') {
+    if (!message.member.permissions.has(PermissionFlagsBits.BanMembers))
+      return message.reply('Je hebt geen permissie om bans te bekijken.');
+
+    const bans = await message.guild.bans.fetch();
+    if (bans.size === 0) return message.channel.send('Er zijn geen gebande gebruikers.');
+
+    const list = bans.map(ban => `${ban.user.tag} (ID: ${ban.user.id})`).join('\n');
+    message.channel.send(list.length > 2000 ? 'Te veel gebande gebruikers om te tonen.' : list);
+  }
+
+  else if (command === 'embed') {
+    const tekst = args.join(' ');
+    if (!tekst) return message.reply('Geef een tekst voor de embed.');
+
+    const embed = new EmbedBuilder()
+      .setDescription(tekst)
+      .setColor(0xff5733)
+      .setTimestamp();
+
+    message.channel.send({ embeds: [embed] });
+  }
+
+  else if (command === 'help') {
+    const embed = new EmbedBuilder()
+      .setTitle('📜 Hulp - Commands')
+      .addFields(
+        { name: '!warn @user [reden]', value: 'Waarschuw een gebruiker.' },
+        { name: '!kick @user [reden]', value: 'Kick een gebruiker.' },
+        { name: '!ban @user [reden]', value: 'Ban een gebruiker.' },
+        { name: '!unban [userID]', value: 'Unban een gebruiker via ID.' },
+        { name: '!clear [aantal]', value: 'Verwijder berichten (1-100).' },
+        { name: '!bans', value: 'Toon gebande gebruikers.' },
+        { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
+        { name: '!help', value: 'Toon dit hulpoverzicht.' }
+      )
+      .setColor(0xff5733)
+      .setTimestamp();
+
+    message.channel.send({ embeds: [embed] });
+  }
 });
 
 client.login(token);
