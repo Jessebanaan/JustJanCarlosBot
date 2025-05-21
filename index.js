@@ -234,13 +234,8 @@ client.on('messageCreate', async (message) => {
     ],
   });
 
-      else if (command === 'close') {
+else if (command === 'close') {
   const channel = message.channel;
-
-      if (!message.member.roles.cache.has('1374718507194908825')) {
-  return message.reply('Je hebt geen toestemming om tickets te sluiten.');
-}
-
 
   // Controleer of het een ticketkanaal is
   if (!channel.name.startsWith('ticket-')) {
