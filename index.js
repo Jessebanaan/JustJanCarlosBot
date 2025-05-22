@@ -426,39 +426,36 @@ client.on('messageCreate', async (message) => {
       } catch (err) {
         message.reply('❌ Ticket sluiten geannuleerd (geen bevestiging ontvangen).');
       }
+    } else if (command === 'info') {
+      const uptime = process.uptime(); // seconden
+      const hours = Math.floor(uptime / 3600);
+      const minutes = Math.floor((uptime % 3600) / 60);
+      const seconds = Math.floor(uptime % 60);
+
+      const embed = new EmbedBuilder()
+        .setTitle('🤖 Just JanCarlos Bot Info')
+        .setDescription('Hier is wat informatie over deze bot.')
+        .addFields(
+          { name: 'Bot naam', value: `${client.user.username}`, inline: true },
+          { name: 'Gemaakt door', value: 'Just JanCarlos Developers', inline: true },
+          { name: 'Servers actief', value: `${client.guilds.cache.size}`, inline: true },
+          { name: 'Gebruikers', value: `${client.users.cache.size}`, inline: true },
+          { name: 'Prefix', value: '`!`', inline: true },
+          { name: 'Versie', value: '1.0.0', inline: true },
+          { name: 'Node.js versie', value: `${process.version}`, inline: true },
+          { name: 'Uptime na de nieuwste update', value: `${hours}u ${minutes}m ${seconds}s`, inline: true }
+        )
+        .setThumbnail(client.user.displayAvatarURL())
+        .setColor(0x7289da)
+        .setFooter({ text: 'Bedankt voor het gebruiken van de bot!' })
+        .setTimestamp();
+
+      await message.channel.send({ embeds: [embed] });
     }
   } catch (err) {
     console.error(`❌ Er trad een fout op bij het verwerken van het commando: ${err.message}`);
   }
 });
-  
-
-else if (command === 'info') {
-  const uptime = process.uptime(); // seconden
-  const hours = Math.floor(uptime / 3600);
-  const minutes = Math.floor((uptime % 3600) / 60);
-  const seconds = Math.floor(uptime % 60);
-
-  const embed = new EmbedBuilder()
-    .setTitle('🤖 Just JanCarlos Bot Info')
-    .setDescription('Hier is wat informatie over deze bot.')
-    .addFields(
-      { name: 'Bot naam', value: `${client.user.username}`, inline: true },
-      { name: 'Gemaakt door', value: 'Just JanCarlos Developers', inline: true },
-      { name: 'Servers actief', value: `${client.guilds.cache.size}`, inline: true },
-      { name: 'Gebruikers', value: `${client.users.cache.size}`, inline: true },
-      { name: 'Prefix', value: '`!`', inline: true },
-      { name: 'Versie', value: '1.0.0', inline: true },
-      { name: 'Node.js versie', value: `${process.version}`, inline: true },
-      { name: 'Uptime na de nieuweste update', value: `${hours}u ${minutes}m ${seconds}s`, inline: true }
-    )
-    .setThumbnail(client.user.displayAvatarURL())
-    .setColor(0x7289da)
-    .setFooter({ text: 'Bedankt voor het gebruiken van de bot!' })
-    .setTimestamp();
-
-  await message.channel.send({ embeds: [embed] });
-}
 
   
     else if (command === 'help') {
