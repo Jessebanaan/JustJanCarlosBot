@@ -33,13 +33,6 @@ client.on('guildMemberAdd', async (member) => {
 
   // Embed voor het welkom-kanaal
   const channelEmbed = new EmbedBuilder()
-  
-    // Vervang 'channelId' door het echte ID van je welkom-kanaal
-const channel = await client.channels.fetch('1342207553324453908');
-if (channel && channel.isTextBased()) {
-  channel.send({ embeds: [channelEmbed] });
-}
-
     .setTitle('👋 Nieuw lid!')
     .setDescription(`Welkom in de server, ${user}!`)
     .addFields(
