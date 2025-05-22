@@ -61,8 +61,9 @@ client.on('guildMemberAdd', async (member) => {
       console.log(`✅ Welkomstbericht geplaatst in #welkom`);
     } catch (err) {
       console.error(`❌ Fout bij verzenden in #welkom: ${err.message}`);
+        }
   }
-
+});
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
