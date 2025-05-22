@@ -233,6 +233,50 @@ client.on('messageCreate', async (message) => {
       await logToChannel(message.guild, embed);
     }
 
+    else if (command === 'mute') {
+  if (!message.member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
+    return message.reply('Je hebt geen toestemming om leden te muten.');
+  }
+
+  const member = message.mentions.members.first();
+  const duration = args[1]; // bijv. "10m" of "1h"
+  const reason = args.slice(2).join(' ') || 'Geen reden opgegeven';
+
+  if (!member) return message.reply('Geef een geldige gebruiker op om te muten.');
+  if (!duration) return message.reply('Geef een geldige duur op, zoals `10m`, `1h`, `1d`.');
+  if (!member.moderatable) return message.reply('Ik kan deze gebruiker niet muten.');
+
+  // Duur converteren naar milliseconden
+  const ms = require('ms'); // zorg dat je `ms` package hebt geïnstalleerd
+
+  const timeInMs = ms(duration);
+  if (!timeInMs || timeInMs < 5000 || timeInMs > 28 * 24 * 60 * 60 * 1000) {
+    return message.reply('Geef een geldige duur tussen 5 seconden en 28 dagen.');
+  }
+
+  try {
+    await member.timeout(timeInMs, reason);
+    message.channel.send(`${member.user.tag} is gemute voor ${duration}. 🤐`);
+
+    const embed = new EmbedBuilder()
+      .setTitle('🤐 Lid gemute')
+      .addFields(
+        { name: 'Gebruiker', value: member.user.tag, inline: true },
+        { name: 'Duur', value: duration, inline: true },
+        { name: 'Reden', value: reason, inline: true },
+        { name: 'Moderator', value: message.author.tag, inline: true }
+      )
+      .setColor(0xffc107)
+      .setTimestamp();
+
+    await logToChannel(message.guild, embed);
+  } catch (error) {
+    console.error(error);
+    message.reply('Er is iets misgegaan bij het muten van deze gebruiker.');
+  }
+}
+
+
     else if (command === 'clear') {
       if (!message.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
         return message.reply('Je hebt geen toestemming om berichten te verwijderen.');
