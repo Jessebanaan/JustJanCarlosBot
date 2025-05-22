@@ -444,7 +444,7 @@ else if (command === 'info') {
       { name: 'Prefix', value: '`!`', inline: true },
       { name: 'Versie', value: '1.0.0', inline: true },
       { name: 'Node.js versie', value: `${process.version}`, inline: true },
-      { name: 'Uptime', value: `${hours}u ${minutes}m ${seconds}s`, inline: true }
+      { name: 'Uptime na de nieuweste update', value: `${hours}u ${minutes}m ${seconds}s`, inline: true }
     )
     .setThumbnail(client.user.displayAvatarURL())
     .setColor(0x7289da)
