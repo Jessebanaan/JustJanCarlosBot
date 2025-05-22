@@ -348,65 +348,90 @@ client.on('messageCreate', async (message) => {
       await logToChannel(message.guild, logEmbed);
     } 
 
-    
-
- const { EmbedBuilder } = require('discord.js');
-
 client.on('messageCreate', async (message) => {
-  try {
-
-  // Negeer bots of berichten zonder prefix
-  if (message.author.bot) return;
+  if (message.author.bot || !message.guild) return;
   if (!message.content.startsWith('!')) return;
 
   const args = message.content.slice(1).trim().split(/ +/);
   const command = args.shift().toLowerCase();
-}
 
-    
-else if (command === 'ticket') {
-  const reason = args.join(' ') || 'Geen reden opgegeven';
-  const ticketName = `ticket-${message.author.username.toLowerCase()}`;
+  try {
+    if (command === 'ticket') {
+      const reason = args.join(' ') || 'Geen reden opgegeven';
+      const ticketName = `ticket-${message.author.username.toLowerCase()}`;
 
-  const existingChannel = message.guild.channels.cache.find(c => c.name === ticketName);
-  if (existingChannel) {
-    return message.reply('Je hebt al een open ticket.');
+      const existingChannel = message.guild.channels.cache.find(c => c.name === ticketName);
+      if (existingChannel) {
+        return message.reply('Je hebt al een open ticket.');
+      }
+
+      const ticketChannel = await message.guild.channels.create({
+        name: ticketName,
+        type: 0, // GUILD_TEXT
+        permissionOverwrites: [
+          {
+            id: message.guild.id,
+            deny: ['ViewChannel'],
+          },
+          {
+            id: message.author.id,
+            allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory'],
+          },
+          {
+            id: '1374718507194908825', // jouw staff role ID
+            allow: ['ViewChannel', 'SendMessages', 'ManageMessages'],
+          },
+        ],
+      });
+
+      const embed = new EmbedBuilder()
+        .setTitle('🎫 Nieuw ticket')
+        .addFields(
+          { name: 'Gebruiker', value: message.author.tag, inline: true },
+          { name: 'Reden', value: reason, inline: true }
+        )
+        .setColor(0x00ffff)
+        .setTimestamp();
+
+      await ticketChannel.send({ content: `<@${message.author.id}>`, embeds: [embed] });
+      await logToChannel(message.guild, embed);
+
+      message.reply(`✅ Ticket aangemaakt: ${ticketChannel}`);
+    } else if (command === 'close') {
+      const channel = message.channel;
+
+      if (!channel.name.startsWith('ticket-')) {
+        return message.reply('Dit commando kan alleen in een ticketkanaal gebruikt worden.');
+      }
+
+      const confirm = await message.reply('Weet je zeker dat je dit ticket wilt sluiten? Typ `!bevestig` binnen 15 seconden.');
+
+      const filter = m => m.author.id === message.author.id && m.content.toLowerCase() === '!bevestig';
+      try {
+        await channel.awaitMessages({ filter, max: 1, time: 15000, errors: ['time'] });
+
+        await channel.send('🎟️ Ticket wordt gesloten...');
+
+        const embed = new EmbedBuilder()
+          .setTitle('🎟️ Ticket gesloten')
+          .addFields(
+            { name: 'Kanaal', value: channel.name, inline: true },
+            { name: 'Gesloten door', value: message.author.tag, inline: true }
+          )
+          .setColor(0xff0000)
+          .setTimestamp();
+
+        await logToChannel(message.guild, embed);
+        await channel.delete();
+      } catch (err) {
+        message.reply('❌ Ticket sluiten geannuleerd (geen bevestiging ontvangen).');
+      }
+    }
+  } catch (err) {
+    console.error(`❌ Er trad een fout op bij het verwerken van het commando: ${err.message}`);
   }
-
-  const ticketChannel = await message.guild.channels.create({
-    name: ticketName,
-    type: 0, // 0 = GUILD_TEXT
-    permissionOverwrites: [
-      {
-        id: message.guild.id, // iedereen
-        deny: ['ViewChannel'],
-      },
-      {
-        id: message.author.id, // de gebruiker
-        allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory'],
-      },
-      {
-        id: '1374718507194908825', // vervang dit door je echte staff role ID
-        allow: ['ViewChannel', 'SendMessages', 'ManageMessages'],
-      },
-    ],
-  });
-
-
-  const embed = new EmbedBuilder()
-    .setTitle('🎫 Nieuw ticket')
-    .addFields(
-      { name: 'Gebruiker', value: message.author.tag, inline: true },
-      { name: 'Reden', value: reason, inline: true }
-    )
-    .setColor(0x00ffff)
-    .setTimestamp();
-
-  await ticketChannel.send({ content: `<@${message.author.id}>`, embeds: [embed] });
-  await logToChannel(message.guild, embed);
-
-  message.reply(`✅ Ticket aangemaakt: ${ticketChannel}`);
-}
+});
+    
 
       else if (command === 'close') {
   const channel = message.channel;
