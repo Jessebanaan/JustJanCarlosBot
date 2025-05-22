@@ -15,6 +15,56 @@ client.once('ready', () => {
   console.log(`✅ Bot is ingelogd als ${client.user.tag}`);
 });
 
+client.on('guildMemberAdd', async (member) => {
+  const user = member.user;
+
+  // Embed voor de DM
+  const dmEmbed = new EmbedBuilder()
+    .setTitle('Welkom bij Just JanCarlos!')
+    .setDescription(
+      `Hoi ${user}, wat leuk dat je de officiële server **Just JanCarlos** hebt gejoined!\n\n` +
+      'Zorg ervoor dat je een kijkje neemt in de regels en chat lekker mee in onze **#general-chat**!\n\n' +
+      '**Veel plezier!**'
+    )
+    .addFields({ name: 'Handige commando\'s', value: '`!ticket`\n`!close`\n`!help`' })
+    .setColor(0x00bfff)
+    .setFooter({ text: 'Just JanCarlos Bot' })
+    .setTimestamp();
+
+  // Embed voor het welkom-kanaal
+  const channelEmbed = new EmbedBuilder()
+    .setTitle('👋 Nieuw lid!')
+    .setDescription(`Welkom in de server, ${user}!`)
+    .addFields(
+      { name: 'Gebruiker', value: `${user.tag}`, inline: true },
+      { name: 'Tip', value: 'Bekijk zeker even de regels en zeg hallo in de chat!' }
+    )
+    .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+    .setColor(0x00ffcc)
+    .setTimestamp();
+
+  try {
+    // Stuur DM
+    await user.send({ embeds: [dmEmbed] });
+    console.log(`✅ Welkomst-DM verzonden naar ${user.tag}`);
+  } catch (err) {
+    console.warn(`⚠️ Kon geen welkomst-DM sturen naar ${user.tag}: ${err.message}`);
+  }
+
+  // Vind het welkom-kanaal en stuur daar de embed
+  const welcomeChannel = member.guild.channels.cache.find(
+    (c) => c.name === 'welkom' && c.isTextBased?.()
+  );
+  if (welcomeChannel) {
+    try {
+      await welcomeChannel.send({ embeds: [channelEmbed] });
+      console.log(`✅ Welkomstbericht geplaatst in #welkom`);
+    } catch (err) {
+      console.error(`❌ Fout bij verzenden in #welkom: ${err.message}`);
+    }
+  }
+});
+
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
