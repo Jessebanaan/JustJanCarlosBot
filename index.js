@@ -69,7 +69,7 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
    // ===== AUTO MODERATION SYSTEM =====
-  const forbiddenWords = ['kanker', 'nigger', 'homo', 'flikker']; // vul je lijst aan
+  const forbiddenWords = ['kanker', 'nigger', 'nigga', 'homo', 'flikker']; // vul je lijst aan
   const inviteRegex = /(discord\.gg\/|discordapp\.com\/invite\/)/gi;
   const everyoneMention = /@everyone|@here/gi;
   const blockedImageNames = ['racist', 'nazi', 'hitler', 'swastika']; // voeg aan op basis van bestandsnamen
@@ -488,7 +488,7 @@ else if (command === 'info') {
 async function logToChannel(guild, embed) {
   // Pas deze kanaalnaam aan als je een andere logkanaalnaam gebruikt
   const logChannel = guild.channels.cache.find(
-    (c) => c.name === 'logs' && c.isTextBased?.()
+    (c) => c.name === '1349092238222688266' && c.isTextBased?.()
   );
 
   if (!logChannel) {
