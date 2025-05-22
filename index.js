@@ -53,7 +53,7 @@ client.on('guildMemberAdd', async (member) => {
 
   // Vind het welkom-kanaal en stuur daar de embed
   const welcomeChannel = member.guild.channels.cache.find(
-    (c) => c.name === 'welkom' && c.isTextBased?.()
+    (c) => c.name === '1342207553324453908' && c.isTextBased?.()
   );
   if (welcomeChannel) {
     try {
