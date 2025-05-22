@@ -1,4 +1,3 @@
-@ -1,538 +1,538 @@
 const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionsBitField } = require('discord.js');
 require('dotenv').config();
 
