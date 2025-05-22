@@ -361,7 +361,7 @@ client.on('messageCreate', message => {
   const command = args.shift().toLowerCase();
 
     
-    else if (command === 'ticket') {
+    else if (command === 'ticket')
   const reason = args.join(' ') || 'Geen reden opgegeven';
   const ticketName = `ticket-${message.author.username.toLowerCase()}`;
 
