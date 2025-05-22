@@ -68,43 +68,53 @@ client.on('guildMemberAdd', async (member) => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
-    // AutoMod - Verboden woorden filter
-  const forbiddenWords = ['kanker', 'nigger', 'kut', 'homo']; // voeg hier je eigen lijst toe
+   // ===== AUTO MODERATION SYSTEM =====
+  const forbiddenWords = ['kanker', 'nigger', 'homo', 'flikker']; // vul je lijst aan
+  const inviteRegex = /(discord\.gg\/|discordapp\.com\/invite\/)/gi;
+  const everyoneMention = /@everyone|@here/gi;
+  const blockedImageNames = ['racist', 'nazi', 'hitler', 'swastika']; // voeg aan op basis van bestandsnamen
 
+  // 1. Verboden woorden filter
   for (const word of forbiddenWords) {
     if (message.content.toLowerCase().includes(word)) {
-      await message.delete().catch(() => {});
-
-      // DM naar gebruiker
-      try {
-        await message.author.send(`⚠️ Je bericht in **${message.guild.name}** is verwijderd omdat het een ongepaste term bevatte.\n\n**Inhoud:**\n${message.content}`);
-      } catch (err) {
-        console.warn(`⚠️ Kan geen DM sturen naar ${message.author.tag}: ${err.message}`);
-      }
-
-      // Bericht in kanaal
-      await message.channel.send({
-        content: `${message.author}, je bericht bevatte een verboden woord en is verwijderd.`,
-        allowedMentions: { users: [message.author.id] }
-      }).then(msg => {
-        setTimeout(() => msg.delete().catch(() => {}), 5000); // tijdelijk zichtbaar
-      });
-
-      // Log in mod-logs kanaal
-      const embed = new EmbedBuilder()
-        .setTitle('🚨 AutoMod: Verboden woord gedetecteerd')
-        .addFields(
-          { name: 'Gebruiker', value: message.author.tag, inline: true },
-          { name: 'Bericht', value: message.content, inline: false },
-          { name: 'Kanaal', value: `<#${message.channel.id}>`, inline: true }
-        )
-        .setColor(0xff0000)
-        .setTimestamp();
-
-      await logToChannel(message.guild, embed);
+      await handleViolation('verboden woord', word, message);
       return;
     }
   }
+
+  // 2. Invite links blokkeren
+  if (inviteRegex.test(message.content)) {
+    await handleViolation('invite link', 'Discord Invite', message);
+    return;
+  }
+
+  // 3. @everyone / @here spam blokkeren
+  if (everyoneMention.test(message.content)) {
+    if (!message.member.permissions.has(PermissionsBitField.Flags.MentionEveryone)) {
+      await handleViolation('massamention', '@everyone/@here', message);
+      return;
+    }
+  }
+
+  // 4. Afbeeldingen checken op naam/mime-type
+  if (message.attachments.size > 0) {
+    for (const [, attachment] of message.attachments) {
+      const filename = attachment.name?.toLowerCase() || '';
+      const mimetype = attachment.contentType || '';
+
+      const isSuspiciousImage =
+        blockedImageNames.some(bad => filename.includes(bad)) ||
+        mimetype.includes('image') && (filename.includes('racist') || filename.includes('nazi'));
+
+      if (isSuspiciousImage) {
+        await handleViolation('ongepaste afbeelding', filename, message);
+        return;
+      }
+    }
+  }
+
+  // ===== EINDE AUTO MOD =====
+
 
 
   const prefix = '!';
@@ -436,5 +446,38 @@ async function logToChannel(guild, embed) {
     await logChannel.send({ embeds: [embed] });
   }
 }
+
+async function handleViolation(type, trigger, message) {
+  await message.delete().catch(() => {});
+  
+  // DM sturen
+  try {
+    await message.author.send(`⚠️ Je bericht in **${message.guild.name}** is verwijderd wegens **${type}**.\n**Inhoud/Trigger:** ${trigger}`);
+  } catch (err) {
+    console.warn(`⚠️ Kan geen DM sturen naar ${message.author.tag}: ${err.message}`);
+  }
+
+  // Publieke waarschuwing
+  const warning = await message.channel.send({
+    content: `${message.author}, je bericht is verwijderd wegens **${type}**.`,
+    allowedMentions: { users: [message.author.id] }
+  });
+  setTimeout(() => warning.delete().catch(() => {}), 5000);
+
+  // Log naar kanaal
+  const embed = new EmbedBuilder()
+    .setTitle('🚨 AutoMod Ingrepen')
+    .addFields(
+      { name: 'Gebruiker', value: message.author.tag, inline: true },
+      { name: 'Soort overtreding', value: type, inline: true },
+      { name: 'Trigger', value: trigger, inline: false },
+      { name: 'Kanaal', value: `<#${message.channel.id}>`, inline: true }
+    )
+    .setColor(0xff0000)
+    .setTimestamp();
+
+  await logToChannel(message.guild, embed);
+}
+
 
 client.login(process.env.TOKEN);
