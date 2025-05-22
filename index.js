@@ -360,21 +360,6 @@ client.on('messageCreate', message => {
   const args = message.content.slice(1).trim().split(/ +/);
   const command = args.shift().toLowerCase();
 
-else if (command === 'credits') {
-  const embed = new EmbedBuilder()
-    .setTitle('📜 Credits')
-    .setDescription(
-      `**Server-owner:** justjancarlosyt\n` +
-      `**YouTube-owner:** justjancarlosyt\n` +
-      `**Server-admins:** hallohallo0768\n` +
-      `**Bot-developer:** hallohallo0768`
-    )
-    .setColor(0x00AE86)
-    .setFooter({ text: 'Bedankt voor het gebruiken van deze bot!' })
-    .setTimestamp();
-
-  await message.channel.send({ embeds: [embed] });
-}
     
     else if (command === 'ticket') {
   const reason = args.join(' ') || 'Geen reden opgegeven';
