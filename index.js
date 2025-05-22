@@ -485,22 +485,21 @@ else if (command === 'info') {
 });
 
 async function logToChannel(guild, embed) {
-  // Pas deze kanaalnaam aan als je een andere logkanaalnaam gebruikt
-  const logChannel = guild.channels.cache.find(
-    (c) => c.name === '1349092238222688266' && c.isTextBased?.()
-  );
+  const logChannelName = 'logs'; // Pas aan naar je echte logkanaal
+  const logChannel = guild.channels.cache.find(channel => channel.name === logChannelName && channel.isTextBased());
 
   if (!logChannel) {
-    console.warn(`⚠️ Geen logkanaal gevonden in ${guild.name}`);
+    console.warn(`⚠️ Logkanaal "${logChannelName}" niet gevonden in ${guild.name}.`);
     return;
   }
 
   try {
     await logChannel.send({ embeds: [embed] });
   } catch (err) {
-    console.error(`❌ Fout bij verzenden naar logkanaal: ${err.message}`);
+    console.error(`❌ Fout bij het loggen in ${logChannelName}:`, err);
   }
 }
+
 
 async function handleViolation(type, trigger, message) {
   await message.delete().catch(() => {});
