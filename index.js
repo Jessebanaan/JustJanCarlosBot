@@ -347,6 +347,35 @@ client.on('messageCreate', async (message) => {
 
       await logToChannel(message.guild, logEmbed);
     } 
+
+    
+
+ const { EmbedBuilder } = require('discord.js');
+
+client.on('messageCreate', message => {
+  // Negeer bots of berichten zonder prefix
+  if (message.author.bot) return;
+  if (!message.content.startsWith('!')) return;
+
+  const args = message.content.slice(1).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  if (command === 'credits') {
+    const embed = new EmbedBuilder()
+      .setColor(0x00AE86)
+      .setTitle('📜 Credits')
+      .setDescription(
+        `**Server-owner:** justjancarlosyt\n` +
+        `**YouTube-owner:** justjancarlosyt\n` +
+        `**Server-admins:** hallohallo0768\n` +
+        `**Bot-developer:** hallohallo0768`
+      )
+      .setFooter({ text: 'Bedankt voor het gebruiken van deze bot!' });
+
+    message.channel.send({ embeds: [embed] });
+  }
+});
+
     
     else if (command === 'ticket') {
   const reason = args.join(' ') || 'Geen reden opgegeven';
