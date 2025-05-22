@@ -352,7 +352,9 @@ client.on('messageCreate', async (message) => {
 
  const { EmbedBuilder } = require('discord.js');
 
-client.on('messageCreate', message => {
+client.on('messageCreate', async (message) => {
+  try {
+
   // Negeer bots of berichten zonder prefix
   if (message.author.bot) return;
   if (!message.content.startsWith('!')) return;
@@ -546,6 +548,12 @@ async function handleViolation(type, trigger, message) {
 
   await logToChannel(message.guild, embed);
 }
+
+  } catch (err) {
+    console.error(err);
+    message.reply('Er is een fout opgetreden tijdens het uitvoeren van het commando.');
+  }
+});
 
 
 client.login(process.env.TOKEN);
