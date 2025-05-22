@@ -26,7 +26,7 @@ client.on('guildMemberAdd', async (member) => {
       'Zorg ervoor dat je een kijkje neemt in de regels en chat lekker mee in onze **#general-chat**!\n\n' +
       '**Veel plezier!**'
     )
-    .addFields({ name: 'Handige commando\'s', value: '`!ticket`\n`!close`\n`!help`' })
+    .addFields({ name: 'Handige commando\'s', value: '`!ticket`\n`!close`\n`!help`\n !info`' })
     .setColor(0x00bfff)
     .setFooter({ text: 'Just JanCarlos Bot' })
     .setTimestamp();
