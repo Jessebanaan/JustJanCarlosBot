@@ -68,6 +68,45 @@ client.on('guildMemberAdd', async (member) => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
+    // AutoMod - Verboden woorden filter
+  const forbiddenWords = ['kanker', 'nigger', 'kut', 'homo']; // voeg hier je eigen lijst toe
+
+  for (const word of forbiddenWords) {
+    if (message.content.toLowerCase().includes(word)) {
+      await message.delete().catch(() => {});
+
+      // DM naar gebruiker
+      try {
+        await message.author.send(`⚠️ Je bericht in **${message.guild.name}** is verwijderd omdat het een ongepaste term bevatte.\n\n**Inhoud:**\n${message.content}`);
+      } catch (err) {
+        console.warn(`⚠️ Kan geen DM sturen naar ${message.author.tag}: ${err.message}`);
+      }
+
+      // Bericht in kanaal
+      await message.channel.send({
+        content: `${message.author}, je bericht bevatte een verboden woord en is verwijderd.`,
+        allowedMentions: { users: [message.author.id] }
+      }).then(msg => {
+        setTimeout(() => msg.delete().catch(() => {}), 5000); // tijdelijk zichtbaar
+      });
+
+      // Log in mod-logs kanaal
+      const embed = new EmbedBuilder()
+        .setTitle('🚨 AutoMod: Verboden woord gedetecteerd')
+        .addFields(
+          { name: 'Gebruiker', value: message.author.tag, inline: true },
+          { name: 'Bericht', value: message.content, inline: false },
+          { name: 'Kanaal', value: `<#${message.channel.id}>`, inline: true }
+        )
+        .setColor(0xff0000)
+        .setTimestamp();
+
+      await logToChannel(message.guild, embed);
+      return;
+    }
+  }
+
+
   const prefix = '!';
   if (!message.content.startsWith(prefix)) return;
 
