@@ -51,10 +51,10 @@ client.on('guildMemberAdd', async (member) => {
     console.warn(`⚠️ Kon geen welkomst-DM sturen naar ${user.tag}: ${err.message}`);
   }
 
-  // Vind het welkom-kanaal en stuur daar de embed
-  const welcomeChannel = member.guild.channels.cache.find(
-    (c) => c.name === '1342207553324453908' && c.isTextBased?.()
-  );
+const welcomeChannel = member.guild.channels.cache.find(
+  (c) => c.id === '1342207553324453908' && c.isTextBased?.()
+);
+
   if (welcomeChannel) {
     try {
       await welcomeChannel.send({ embeds: [channelEmbed] });
