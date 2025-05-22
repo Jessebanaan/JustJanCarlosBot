@@ -432,7 +432,8 @@ async function handleViolation(type, trigger, message) {
   } catch (err) {
     console.error(err);
     message.reply('Er is een fout opgetreden tijdens het uitvoeren van het commando.');
-  }
+      }
+    }
 });
 
 
