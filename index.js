@@ -334,8 +334,26 @@ client.on('messageCreate', async (message) => {
   }
 }
 
+else if (command === 'info') {
+  const embed = new EmbedBuilder()
+    .setTitle('🤖 Just JanCarlos Bot Info')
+    .setDescription('Hier is wat informatie over deze bot.')
+    .addFields(
+      { name: 'Bot naam', value: `${client.user.username}`, inline: true },
+      { name: 'Gemaakt door', value: 'Just JanCarlos', inline: true },
+      { name: 'Aantal servers', value: `${client.guilds.cache.size}`, inline: true },
+      { name: 'Aantal gebruikers', value: `${client.users.cache.size}`, inline: true },
+      { name: 'Versie', value: '1.0.0', inline: true },
+      { name: 'Prefix', value: '`!`', inline: true }
+    )
+    .setThumbnail(client.user.displayAvatarURL())
+    .setColor(0x7289da)
+    .setFooter({ text: 'Bedankt voor het gebruiken van de bot!' })
+    .setTimestamp();
 
-
+  await message.channel.send({ embeds: [embed] });
+}
+  
     else if (command === 'help') {
       const embed = new EmbedBuilder()
         .setTitle('📖 Help Menu')
@@ -349,7 +367,8 @@ client.on('messageCreate', async (message) => {
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
-          { name: '!close', value: 'Sluit een ticket' }
+          { name: '!close', value: 'Sluit een ticket' },
+          { name: '!info', value: 'Stuurt informatie over de server' }
         )
         .setColor(0x00bfff)
         .setFooter({ text: 'Just JanCarlos Bot' })
