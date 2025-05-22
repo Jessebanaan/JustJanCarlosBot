@@ -33,6 +33,13 @@ client.on('guildMemberAdd', async (member) => {
 
   // Embed voor het welkom-kanaal
   const channelEmbed = new EmbedBuilder()
+  
+    // Vervang 'channelId' door het echte ID van je welkom-kanaal
+const channel = await client.channels.fetch('1342207553324453908');
+if (channel && channel.isTextBased()) {
+  channel.send({ embeds: [channelEmbed] });
+}
+
     .setTitle('👋 Nieuw lid!')
     .setDescription(`Welkom in de server, ${user}!`)
     .addFields(
@@ -464,6 +471,7 @@ else if (command === 'info') {
           { name: '!unban [gebruiker ID]', value: 'Unban een gebruiker.' },
           { name: '!kick @gebruiker [reden]', value: 'Kick een gebruiker.' },
           { name: '!warn @gebruiker [reden]', value: 'Waarschuw een gebruiker.' },
+          { name: '!mute @gebruiker [tijd]', value: 'Mute een gebruiker.' },
           { name: '!clear [aantal]', value: 'Verwijder berichten.' },
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
@@ -485,9 +493,20 @@ else if (command === 'info') {
 });
 
 async function logToChannel(guild, embed) {
-  const logChannel = guild.channels.cache.find(c => c.name === 'mod-logs' && c.isTextBased?.());
-  if (logChannel) {
+  // Pas deze kanaalnaam aan als je een andere logkanaalnaam gebruikt
+  const logChannel = guild.channels.cache.find(
+    (c) => c.name === 'logs' && c.isTextBased?.()
+  );
+
+  if (!logChannel) {
+    console.warn(`⚠️ Geen logkanaal gevonden in ${guild.name}`);
+    return;
+  }
+
+  try {
     await logChannel.send({ embeds: [embed] });
+  } catch (err) {
+    console.error(`❌ Fout bij verzenden naar logkanaal: ${err.message}`);
   }
 }
 
