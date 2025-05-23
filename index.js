@@ -63,7 +63,7 @@ client.on('guildMemberAdd', async (member) => {
   const dmEmbed = new EmbedBuilder()
     .setTitle('Welkom bij Just JanCarlos!')
     .setDescription(
-      `Hoi ${user}, wat leuk dat je de officiële server **Just JanCarlos** hebt gejoined!\n\n` +
+      `Hoi ${user}, wat leuk dat je de officiële server van **Just JanCarlos** hebt gejoined!\n\n` +
       'Zorg ervoor dat je een kijkje neemt in de regels en chat lekker mee in onze **#general-chat**!\n\n' +
       '**Veel plezier!**'
     )
@@ -119,7 +119,7 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
    // ===== AUTO MODERATION SYSTEM =====
-  const forbiddenWords = ['kanker', 'nigger', 'nigga', 'homo', 'flikker']; // vul je lijst aan
+  const forbiddenWords = ['kanker', 'nigger', 'nigga', 'homo', 'flikker', 'neuk', 'neuken', 'fuck', 'fucking', 'kut', 'klootzak', 'idioot', 'idiot']; // vul je lijst aan
   const inviteRegex = /(discord\.gg\/|discordapp\.com\/invite\/)/gi;
   const everyoneMention = /@everyone|@here/gi;
   const blockedImageNames = ['racist', 'nazi', 'hitler', 'swastika']; // voeg aan op basis van bestandsnamen
@@ -534,6 +534,22 @@ else if (command === 'add') {
 
   message.reply(`❌ ${user.tag} is verwijderd uit dit ticket.`);
 }
+
+else if (command === 'coinflip') {
+  // Kies random tussen kop of munt
+  const outcome = Math.random() < 0.5 ? 'Kop 🪙' : 'Munt 🪙';
+
+  const embed = new EmbedBuilder()
+    .setTitle('🪙 Coinflip Resultaat')
+    .setDescription(`Je gooide de munt en het resultaat is...`)
+    .addFields({ name: 'Resultaat', value: `**${outcome}**` })
+    .setColor(outcome.includes('Kop') ? 0xFFD700 : 0xC0C0C0) // goud voor kop, zilver voor munt
+    .setFooter({ text: 'Coinflip uitgevoerd door Just JanCarlos Bot' })
+    .setTimestamp();
+
+  await message.channel.send({ embeds: [embed] });
+}
+
             
 else if (command === 'info') {
   const uptime = process.uptime(); // seconden
