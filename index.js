@@ -11,6 +11,37 @@ const client = new Client({
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
+const fs = require('fs');
+let levels = require('./levels.json'); // of .js als je dat handiger vindt
+
+function getXPRequired(level) {
+  return Math.floor(100 * Math.pow(1.5, level - 1));
+}
+
+client.on('messageCreate', async message => {
+  if (message.author.bot) return;
+
+  const userId = message.author.id;
+  if (!levels[userId]) {
+    levels[userId] = { xp: 0, level: 1 };
+  }
+
+  levels[userId].xp += 20;
+
+  const neededXP = getXPRequired(levels[userId].level + 1);
+  if (levels[userId].xp >= neededXP) {
+    levels[userId].level += 1;
+    levels[userId].xp = 0;
+
+    message.channel.send(`🎉 ${message.author.username} is nu level ${levels[userId].level}!`);
+  }
+
+  // Save naar bestand
+  fs.writeFile('./levels.json', JSON.stringify(levels, null, 2), err => {
+    if (err) console.error(err);
+  });
+});
+
 client.once('ready', () => {
   console.log(`✅ Bot is ingelogd als ${client.user.tag}`);
 });
