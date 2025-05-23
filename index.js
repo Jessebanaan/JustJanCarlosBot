@@ -556,6 +556,67 @@ else if (command === 'coinflip') {
   }, 2000);
 }
 
+  else if (command === 'rules') {
+  const embed = new EmbedBuilder()
+    .setTitle('📜 Serverregels')
+    .setDescription(
+      `1️⃣ **Respecteer iedereen**\n` +
+      `Behandel anderen zoals je zelf behandeld wilt worden.\n` +
+      `Geen haat, pesten, discriminatie of bedreigingen.\n` +
+      `Dit kan resulteren in een waarschuwing of time-out.\n\n` +
+
+      `2️⃣ **Geen spam of zelfpromotie**\n` +
+      `Geen overmatig herhalen van berichten, capslock of onnodige mentions.\n` +
+      `Zelfpromotie alleen in de daarvoor bestemde kanalen (als toegestaan).\n` +
+      `Zie het waarschuwingssysteem in 📣updates of hieronder.\n\n` +
+
+      `3️⃣ **Blijf on-topic**\n` +
+      `Post berichten in de juiste kanalen.\n` +
+      `Gebruik de juiste threads of secties voor specifieke onderwerpen.\n\n` +
+
+      `4️⃣ **Geen NSFW of ongepaste content**\n` +
+      `Geen 18+ content, gore, of ander ongepast materiaal.\n` +
+      `Geen links naar illegale of schadelijke websites.\n` +
+      `Plaatsen van ongepaste content zal resulteren in een ban.\n\n` +
+
+      `5️⃣ **Gebruik gezond verstand**\n` +
+      `Volg de instructies van de moderators en admins.\n` +
+      `Geen misbruik van bots of exploits.\n` +
+      `Niet luisteren is een timeout van de moderator.\n\n` +
+
+      `6️⃣ **Houd het leuk en positief!**\n` +
+      `Dit is een community voor fans van Just JanCarlos, laten we het gezellig houden!\n` +
+      `Discussies mogen, maar houd het respectvol.\n\n` +
+
+      `7️⃣ **Privacy en veiligheid**\n` +
+      `Deel geen persoonlijke informatie.\n` +
+      `Bescherm je eigen gegevens en die van anderen.\n` +
+      `Doe je het toch dan zal je gekickt worden.\n\n` +
+
+      `8️⃣ **Taalgebruik**\n` +
+      `Gebruik gepast taalgebruik.\n` +
+      `De hoofdtaal van de server is Nederlands, gebruik deze zoveel mogelijk.\n` +
+      `English can be talked in 🇬🇧en-chat.\n\n` +
+
+      `9️⃣ **Geen illegale activiteiten**\n` +
+      `Geen piraterij, hacking of discussies over illegale activiteiten.\n` +
+      `Respecteer auteursrechten en andere regels.\n` +
+      `Blijf op de hoogte via 📣updates.\n\n` +
+
+      `🔹 **Overtreden van deze regels kan leiden tot een time-out, kick of ban.**\n\n` +
+
+      `📌 **Waarschuwingssysteem**\n` +
+      `Als je een waarschuwing krijgt (dus wanneer je een regel overtreedt), stuurt @Just JanCarlos Bot je een berichtje.\n` +
+      `Bij herhaling kun je gekickt, gemute of geband worden.`
+    )
+    .setColor(0xffcc00)
+    .setFooter({ text: 'Lees en volg de regels om het gezellig te houden!' })
+    .setTimestamp();
+
+  await message.channel.send({ embeds: [embed] });
+}
+
+
 
             
 else if (command === 'info') {
