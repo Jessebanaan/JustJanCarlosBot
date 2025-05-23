@@ -34,7 +34,8 @@ client.on('guildMemberAdd', async (member) => {
     '**`!add @gebruiker`** – Voeg een gebruiker toe aan het ticket.\n' +
     '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
     '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
-    '**`!info`** – Toon informatie over de bot of server.'
+    '**`!info`** – Toon informatie over de bot of server.' +
+    '**`!level`** – Laat jouw level zien.'
   })
     .setColor(0x00bfff)
     .setFooter({ text: 'Just JanCarlos Bot' })
@@ -330,6 +331,23 @@ client.on('messageCreate', async (message) => {
 
       await logToChannel(message.guild, logEmbed);
     } 
+
+      else if (command === 'level') {
+  const user = message.mentions.users.first() || message.author;
+  const userData = levels[user.id] || { level: 1, xp: 0 };
+  const neededXP = getXPRequired(userData.level + 1);
+
+  const embed = new EmbedBuilder()
+    .setTitle(`🏅 Level info voor ${user.username}`)
+    .addFields(
+      { name: 'Level', value: `${userData.level}`, inline: true },
+      { name: 'XP', value: `${userData.xp} / ${neededXP}`, inline: true }
+    )
+    .setColor(0xf1c40f);
+
+  message.channel.send({ embeds: [embed] });
+}
+
     
     else if (command === 'poll') {
       const pollText = args.join(' ');
@@ -517,6 +535,7 @@ else if (command === 'info') {
           { name: '!mute @gebruiker [tijd]', value: 'Mute een gebruiker.' },
           { name: '!clear [aantal]', value: 'Verwijder berichten.' },
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
+          { name: '!level', value: 'Laat jouw level zien.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
           { name: '!add', value: 'Voeg een gebruiker toe aan de ticket.' },
