@@ -426,6 +426,48 @@ client.on('messageCreate', async (message) => {
   }
 }
 
+else if (command === 'add') {
+  const channel = message.channel;
+
+  // Zorg dat dit alleen in ticketkanalen werkt
+  if (!channel.name.startsWith('ticket-')) {
+    return message.reply('Dit commando kan alleen in een ticketkanaal gebruikt worden.');
+  }
+
+  const user = message.mentions.users.first();
+  if (!user) {
+    return message.reply('Je moet een gebruiker taggen die je wilt toevoegen aan het ticket.');
+  }
+
+  await channel.permissionOverwrites.edit(user.id, {
+    ViewChannel: true,
+    SendMessages: true,
+    ReadMessageHistory: true,
+  });
+
+  message.reply(`✅ ${user.tag} is toegevoegd aan dit ticket.`);
+}
+
+  else if (command === 'remove') {
+  const channel = message.channel;
+
+  // Zorg dat dit alleen in ticketkanalen werkt
+  if (!channel.name.startsWith('ticket-')) {
+    return message.reply('Dit commando kan alleen in een ticketkanaal gebruikt worden.');
+  }
+
+  const user = message.mentions.users.first();
+  if (!user) {
+    return message.reply('Je moet een gebruiker taggen die je wilt verwijderen uit het ticket.');
+  }
+
+  await channel.permissionOverwrites.edit(user.id, {
+    ViewChannel: false,
+  });
+
+  message.reply(`❌ ${user.tag} is verwijderd uit dit ticket.`);
+}
+            
 else if (command === 'info') {
   const uptime = process.uptime(); // seconden
   const hours = Math.floor(uptime / 3600);
@@ -437,13 +479,13 @@ else if (command === 'info') {
     .setDescription('Hier is wat informatie over deze bot.')
     .addFields(
       { name: 'Bot naam', value: `${client.user.username}`, inline: true },
-      { name: 'Gemaakt door', value: 'Just JanCarlos Developers', inline: true },
+      { name: 'Gemaakt door', value: 'JJC Developers', inline: true },
       { name: 'Servers actief', value: `${client.guilds.cache.size}`, inline: true },
       { name: 'Gebruikers', value: `${client.users.cache.size}`, inline: true },
       { name: 'Prefix', value: '`!`', inline: true },
       { name: 'Versie', value: '1.0.0', inline: true },
       { name: 'Node.js versie', value: `${process.version}`, inline: true },
-      { name: 'Uptime na de nieuweste update', value: `${hours}u ${minutes}m ${seconds}s`, inline: true }
+      { name: 'Uptime na de nieuwste update', value: `${hours}u ${minutes}m ${seconds}s`, inline: true }
     )
     .setThumbnail(client.user.displayAvatarURL())
     .setColor(0x7289da)
@@ -468,6 +510,7 @@ else if (command === 'info') {
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
+          { name: '!add', value: 'Voeg iemand toe aan een ticket' },
           { name: '!close', value: 'Sluit een ticket' },
           { name: '!info', value: 'Stuurt informatie over de server' }
         )
