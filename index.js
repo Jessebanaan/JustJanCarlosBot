@@ -26,7 +26,16 @@ client.on('guildMemberAdd', async (member) => {
       'Zorg ervoor dat je een kijkje neemt in de regels en chat lekker mee in onze **#general-chat**!\n\n' +
       '**Veel plezier!**'
     )
-    .addFields({ name: 'Handige commando\'s', value: '`!ticket`\n`!close`\n`!help`\n`!info`' })
+    .addFields({
+  name: '📋 Handige commando\'s',
+  value:
+    '**`!ticket [reden]`** – Maak een ticket aan.\n' +
+    '**`!close`** – Sluit de ticket.\n' +
+    '**`!add @gebruiker`** – Voeg een gebruiker toe aan het ticket.\n' +
+    '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
+    '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
+    '**`!info`** – Toon informatie over de bot of server.'
+  })
     .setColor(0x00bfff)
     .setFooter({ text: 'Just JanCarlos Bot' })
     .setTimestamp();
@@ -510,9 +519,10 @@ else if (command === 'info') {
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
-          { name: '!add', value: 'Voeg iemand toe aan een ticket' },
-          { name: '!close', value: 'Sluit een ticket' },
-          { name: '!info', value: 'Stuurt informatie over de server' }
+          { name: '!add', value: 'Voeg een gebruiker toe aan de ticket.' },
+          { name: '!remove', value: 'Verwijder een gebruiker uit de ticket.' },
+          { name: '!close', value: 'Sluit de ticket.' },
+          { name: '!info', value: 'Stuurt informatie over de server.' }
         )
         .setColor(0x00bfff)
         .setFooter({ text: 'Just JanCarlos Bot' })
