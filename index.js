@@ -556,6 +556,33 @@ else if (command === 'coinflip') {
   }, 2000);
 }
 
+  else if (command === 'boosters') {
+  await message.guild.members.fetch(); // Zorg dat je alle leden hebt
+
+  const boosters = message.guild.members.cache.filter(member => member.premiumSince);
+
+  if (boosters.size === 0) {
+    return message.channel.send('🚫 Er zijn momenteel geen boosters in de server.');
+  }
+
+  const boosterList = boosters.map(member => {
+    const date = `<t:${Math.floor(member.premiumSince.getTime() / 1000)}:D>`; // Formatteer als Discord tijdstempel
+    return `- ${member.user.tag} (sinds ${date})`;
+  }).join('\n');
+
+  const embed = new EmbedBuilder()
+    .setTitle('🚀 Server Boosters')
+    .setDescription('Hieronder staan de geweldige mensen die deze server boosten 💜')
+    .addFields({ name: '🌟 Boosters', value: boosterList })
+    .setColor(0xf47fff)
+    .setThumbnail('https://cdn.discordapp.com/emojis/850196989163167764.gif') // Aanpassen naar eigen icoon indien gewenst
+    .setFooter({ text: 'Dankjewel aan alle boosters voor jullie support! 💜' })
+    .setTimestamp();
+
+  await message.channel.send({ embeds: [embed] });
+}
+
+
   else if (command === 'rules') {
   const embed = new EmbedBuilder()
     .setTitle('📜 Serverregels')
