@@ -76,7 +76,7 @@ client.on('guildMemberAdd', async (member) => {
     '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
     '**`!level`** – Laat jouw level zien.'+
     '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
-    '**`!info`** – Toon informatie over de bot of server.' +
+    '**`!info`** – Toon informatie over de bot.**'
   })
     .setColor(0x00bfff)
     .setFooter({ text: 'Just JanCarlos Bot' })
