@@ -75,6 +75,7 @@ client.on('guildMemberAdd', async (member) => {
     '**`!add @gebruiker`** – Voeg een gebruiker toe aan het ticket.\n' +
     '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
     '**`!level`** – Laat jouw level zien.'+
+    '**`!coinflip`** – Speel kop of munt.**' +
     '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
     '**`!info`** – Toon informatie over de bot.**'
   })
@@ -596,6 +597,7 @@ else if (command === 'info') {
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
           { name: '!add', value: 'Voeg een gebruiker toe aan de ticket.' },
           { name: '!remove', value: 'Verwijder een gebruiker uit de ticket.' },
+          { name: '!coinflip', value: 'Speel kop of munt.' },
           { name: '!close', value: 'Sluit de ticket.' },
           { name: '!info', value: 'Stuurt informatie over de server.' }
         )
