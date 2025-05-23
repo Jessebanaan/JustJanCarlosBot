@@ -15,7 +15,7 @@ const client = new Client({
 client.on('ready', () => {
   console.log(`✅ Ingelogd als ${client.user.tag}`);
 
-  client.user.setActivity('Just JanCarlos', { type: ActivityType.Watching });
+  client.user.setActivity('Just JanCarlos op Youtube', { type: ActivityType.Watching });
 });
 
 const fs = require('fs');
