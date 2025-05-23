@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionsBitField } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, EmbedBuilder, PermissionsBitField, ActivityType } = require('discord.js');
 require('dotenv').config();
 
 const client = new Client({
@@ -9,6 +9,13 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
+});
+
+// ✅ Status instellen zodra de bot klaar is
+client.on('ready', () => {
+  console.log(`✅ Ingelogd als ${client.user.tag}`);
+
+  client.user.setActivity('Just JanCarlos', { type: ActivityType.Watching });
 });
 
 const fs = require('fs');
