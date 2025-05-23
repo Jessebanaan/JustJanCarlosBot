@@ -12,7 +12,9 @@ const client = new Client({
 });
 
 const fs = require('fs');
-let levels = require('./levels.json'); // of .js als je dat handiger vindt
+let levels = require('./levels.json');
+
+const cooldowns = new Map(); // Cooldown map
 
 function getXPRequired(level) {
   return Math.floor(100 * Math.pow(1.5, level - 1));
@@ -22,6 +24,10 @@ client.on('messageCreate', async message => {
   if (message.author.bot) return;
 
   const userId = message.author.id;
+
+  // Check cooldown
+  if (cooldowns.has(userId)) return;
+
   if (!levels[userId]) {
     levels[userId] = { xp: 0, level: 1 };
   }
@@ -40,6 +46,10 @@ client.on('messageCreate', async message => {
   fs.writeFile('./levels.json', JSON.stringify(levels, null, 2), err => {
     if (err) console.error(err);
   });
+
+  // Zet cooldown van 15 seconden
+  cooldowns.set(userId, true);
+  setTimeout(() => cooldowns.delete(userId), 15000);
 });
 
 client.once('ready', () => {
