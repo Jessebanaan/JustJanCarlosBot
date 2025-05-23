@@ -537,19 +537,25 @@ else if (command === 'add') {
 }
 
 else if (command === 'coinflip') {
-  // Kies random tussen kop of munt
-  const outcome = Math.random() < 0.5 ? 'Kop 🪙' : 'Munt 🪙';
+  // Tijdelijke melding
+  const loadingMessage = await message.channel.send('🪙 Gooit de munt...');
 
-  const embed = new EmbedBuilder()
-    .setTitle('🪙 Coinflip Resultaat')
-    .setDescription(`Je gooide de munt en het resultaat is...`)
-    .addFields({ name: 'Resultaat', value: `**${outcome}**` })
-    .setColor(outcome.includes('Kop') ? 0xFFD700 : 0xC0C0C0) // goud voor kop, zilver voor munt
-    .setFooter({ text: 'Coinflip uitgevoerd door Just JanCarlos Bot' })
-    .setTimestamp();
+  // Wacht 2 seconden
+  setTimeout(async () => {
+    const outcome = Math.random() < 0.5 ? 'Kop 🪙' : 'Munt 🪙';
 
-  await message.channel.send({ embeds: [embed] });
+    const embed = new EmbedBuilder()
+      .setTitle('🪙 Coinflip Resultaat')
+      .setDescription('Je gooide de munt en het resultaat is...')
+      .addFields({ name: 'Resultaat', value: `**${outcome}**` })
+      .setColor(outcome.includes('Kop') ? 0xFFD700 : 0xC0C0C0)
+      .setFooter({ text: 'Coinflip uitgevoerd door Just JanCarlos Bot' })
+      .setTimestamp();
+
+    await loadingMessage.edit({ content: '', embeds: [embed] });
+  }, 2000);
 }
+
 
             
 else if (command === 'info') {
