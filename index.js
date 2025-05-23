@@ -76,6 +76,7 @@ client.on('guildMemberAdd', async (member) => {
     '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
     '**`!level`** – Laat jouw level zien.'+
     '**`!coinflip`** – Speel kop of munt.**' +
+     '**`!boosters`** – Laat de leden zien die de server hebben geboost.**' +
     '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
     '**`!info`** – Toon informatie over de bot.**'
   })
@@ -686,6 +687,7 @@ else if (command === 'info') {
           { name: '!mute @gebruiker [tijd]', value: 'Mute een gebruiker.' },
           { name: '!clear [aantal]', value: 'Verwijder berichten.' },
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
+          { name: '!boosters', value: 'Laat de leden zien die de server hebben geboost.' },
           { name: '!level', value: 'Laat jouw level zien.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
