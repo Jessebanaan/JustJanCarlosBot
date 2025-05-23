@@ -492,7 +492,6 @@ client.on('messageCreate', async (message) => {
   } catch (error) {
     confirm.edit('❌ Ticket sluiten geannuleerd of geen bevestiging ontvangen.');
   }
-}
 
 else if (command === 'add') {
   const channel = message.channel;
