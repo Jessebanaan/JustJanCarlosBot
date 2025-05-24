@@ -651,32 +651,53 @@ else if (command === 'coinflip') {
   await message.channel.send({ embeds: [embed] });
 }
 
-
-    else if (command === 'giveaway') {
-  // Alleen admins mogen deze command gebruiken
+else if (command === 'giveaway') {
   if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
     return message.reply('Je hebt geen toestemming om deze command te gebruiken.');
   }
 
-  const duration = parseInt(args[0]); // In seconden
+  const timeInput = args[0]; // bijv. '30s', '10m', '2h', '1d'
   const prize = args.slice(1).join(' ');
 
-  if (!duration || !prize) {
-    return message.reply('Gebruik: `!giveaway [seconden] [prijs]`');
+  if (!timeInput || !prize) {
+    return message.reply('Gebruik: `!giveaway [tijd][s/m/h/d] [prijs]`\nBijvoorbeeld: `!giveaway 10m Nitro`');
+  }
+
+  // Parse tijd (zoals 10m → 600 seconden)
+  const timeMatch = timeInput.match(/^(\d+)(s|m|h|d)$/);
+  if (!timeMatch) {
+    return message.reply('Ongeldige tijdsindeling. Gebruik `s` (seconden), `m` (minuten), `h` (uren) of `d` (dagen).');
+  }
+
+  const value = parseInt(timeMatch[1]);
+  const unit = timeMatch[2];
+
+  let duration = 0;
+  switch (unit) {
+    case 's':
+      duration = value;
+      break;
+    case 'm':
+      duration = value * 60;
+      break;
+    case 'h':
+      duration = value * 60 * 60;
+      break;
+    case 'd':
+      duration = value * 60 * 60 * 24;
+      break;
   }
 
   const embed = new EmbedBuilder()
     .setTitle('🎉 Giveaway!')
-    .setDescription(`Prijs: **${prize}**\nReacteer met 🎉 om mee te doen!\nTijd: ${duration} seconden`)
+    .setDescription(`Prijs: **${prize}**\nReacteer met 🎉 om mee te doen!\nTijd: ${timeInput}`)
     .setColor(0x00bfff)
     .setTimestamp();
 
   const giveawayMessage = await message.channel.send({ embeds: [embed] });
   await giveawayMessage.react('🎉');
 
-  // Na afloop winnaar kiezen
   setTimeout(async () => {
-    // Update de cache
     await giveawayMessage.fetch();
     const reactions = giveawayMessage.reactions.cache.get('🎉');
     await reactions.users.fetch();
@@ -690,7 +711,6 @@ else if (command === 'coinflip') {
     message.channel.send(`🎊 Gefeliciteerd ${winner}! Je hebt **${prize}** gewonnen!`);
   }, duration * 1000);
 }
-
 
 
             
