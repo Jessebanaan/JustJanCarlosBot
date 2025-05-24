@@ -83,6 +83,7 @@ client.on('guildMemberAdd', async (member) => {
     '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
     '**`!level`** – Laat jouw level zien.'+
     '**`!suggestion [suggestie]`** – Stuur een suggestie.'+
+    '**`!justjancarlos`** – Stuur informatie over Just JanCarlos.'+
     '**`!coinflip`** – Speel kop of munt.**' +
      '**`!boosters`** – Laat de leden zien die de server hebben geboost.**' +
     '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
@@ -668,7 +669,7 @@ else if (command === 'justjancarlos') {
       { name: 'TikTok', value: '[Klik hier](https://www.tiktok.com/@jcf.035?_t=ZG-8wcmIqMcurx&_r=1)', inline: true },
       { name: 'Discord Server', value: 'Je zit er al in! Veel plezier!', inline: true }
     )
-    .setThumbnail('JJC_pfp.png') // Optioneel: Voeg zijn profielfoto/logo toe
+    .setThumbnail('') // Optioneel: Voeg zijn profielfoto/logo toe
     .setColor(0xff6600)
     .setFooter({ text: 'Informatie over Just JanCarlos' })
     .setTimestamp();
@@ -805,7 +806,8 @@ else if (command === 'info') {
           { name: '!warn @gebruiker [reden]', value: 'Waarschuw een gebruiker.' },
           { name: '!mute @gebruiker [tijd]', value: 'Mute een gebruiker.' },
           { name: '!clear [aantal]', value: 'Verwijder berichten.' },
-           { name: '!giveaway [tijd] [prijs]', value: 'Verwijder berichten.' },
+          { name: '!justjancarlos', value: 'Stuur informatie over Just JanCarlos.' },  
+          { name: '!giveaway [tijd] [prijs]', value: 'Verwijder berichten.' },
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
           { name: '!boosters', value: 'Laat de leden zien die de server hebben geboost.' },
           { name: '!level', value: 'Laat jouw level zien.' },
