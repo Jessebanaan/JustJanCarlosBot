@@ -655,6 +655,28 @@ else if (command === 'coinflip') {
   await message.channel.send({ embeds: [embed] });
 }
 
+    
+else if (command === 'justjancarlos') {
+  const embed = new EmbedBuilder()
+    .setTitle('🎬 Over Just JanCarlos')
+    .setDescription(
+      '**Just JanCarlos** is een Nederlandse content creator en YouTuber die bekend staat om zijn entertainment, humor en community-interacties!\n\n' +
+      'Hij maakt video\'s over uiteenlopende onderwerpen zoals games, challenges en IRL content. Zijn positieve vibe en betrokkenheid met fans maken hem uniek.'
+    )
+    .addFields(
+      { name: 'YouTube Kanaal', value: '[Klik hier](https://youtube.com/@justjancarlossabboneerff?si=zOEGmaW1a7Csxj4P)', inline: true },
+      { name: 'TikTok', value: '[Klik hier](https://www.tiktok.com/@jcf.035?_t=ZG-8wcmIqMcurx&_r=1)', inline: true },
+      { name: 'Discord Server', value: 'Je zit er al in! Veel plezier!', inline: true }
+    )
+    .setThumbnail('JJC_pfp.png') // Optioneel: Voeg zijn profielfoto/logo toe
+    .setColor(0xff6600)
+    .setFooter({ text: 'Informatie over Just JanCarlos' })
+    .setTimestamp();
+
+  await message.channel.send({ embeds: [embed] });
+}
+
+
 else if (command === 'giveaway') {
   if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
     return message.reply('Je hebt geen toestemming om deze command te gebruiken.');
