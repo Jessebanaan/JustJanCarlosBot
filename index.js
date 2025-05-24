@@ -669,7 +669,7 @@ else if (command === 'justjancarlos') {
       { name: 'TikTok', value: '[Klik hier](https://www.tiktok.com/@jcf.035?_t=ZG-8wcmIqMcurx&_r=1)', inline: true },
       { name: 'Discord Server', value: 'Je zit er al in! Veel plezier!', inline: true }
     )
-    .setThumbnail('') // Optioneel: Voeg zijn profielfoto/logo toe
+  //  .setThumbnail('JJC_pfp.png') // Optioneel: Voeg zijn profielfoto/logo toe
     .setColor(0xff6600)
     .setFooter({ text: 'Informatie over Just JanCarlos' })
     .setTimestamp();
