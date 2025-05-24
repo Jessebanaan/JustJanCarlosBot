@@ -652,6 +652,46 @@ else if (command === 'coinflip') {
 }
 
 
+    else if (command === 'giveaway') {
+  // Alleen admins mogen deze command gebruiken
+  if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    return message.reply('Je hebt geen toestemming om deze command te gebruiken.');
+  }
+
+  const duration = parseInt(args[0]); // In seconden
+  const prize = args.slice(1).join(' ');
+
+  if (!duration || !prize) {
+    return message.reply('Gebruik: `!giveaway [seconden] [prijs]`');
+  }
+
+  const embed = new EmbedBuilder()
+    .setTitle('🎉 Giveaway!')
+    .setDescription(`Prijs: **${prize}**\nReacteer met 🎉 om mee te doen!\nTijd: ${duration} seconden`)
+    .setColor(0x00bfff)
+    .setTimestamp();
+
+  const giveawayMessage = await message.channel.send({ embeds: [embed] });
+  await giveawayMessage.react('🎉');
+
+  // Na afloop winnaar kiezen
+  setTimeout(async () => {
+    // Update de cache
+    await giveawayMessage.fetch();
+    const reactions = giveawayMessage.reactions.cache.get('🎉');
+    await reactions.users.fetch();
+
+    const participants = reactions.users.cache.filter(user => !user.bot);
+    if (participants.size === 0) {
+      return message.channel.send('Geen deelnemers, geen winnaar.');
+    }
+
+    const winner = participants.random();
+    message.channel.send(`🎊 Gefeliciteerd ${winner}! Je hebt **${prize}** gewonnen!`);
+  }, duration * 1000);
+}
+
+
 
             
 else if (command === 'info') {
@@ -693,6 +733,7 @@ else if (command === 'info') {
           { name: '!warn @gebruiker [reden]', value: 'Waarschuw een gebruiker.' },
           { name: '!mute @gebruiker [tijd]', value: 'Mute een gebruiker.' },
           { name: '!clear [aantal]', value: 'Verwijder berichten.' },
+           { name: '!giveaway [tijd] [prijs]', value: 'Verwijder berichten.' },
           { name: '!embed [tekst]', value: 'Stuur een embed met jouw tekst.' },
           { name: '!boosters', value: 'Laat de leden zien die de server hebben geboost.' },
           { name: '!level', value: 'Laat jouw level zien.' },
