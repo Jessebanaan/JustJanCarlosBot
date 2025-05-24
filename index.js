@@ -362,25 +362,28 @@ client.on('messageCreate', async (message) => {
       await logToChannel(message.guild, embed);
     } 
     
-    else if (command === 'embed') {
-      const tekst = args.join(' ');
-      if (!tekst) return message.reply('Voeg tekst toe aan het embed bericht.');
+   else if (command === 'embed') {
+  const tekst = args.join(' ');
+  if (!tekst) return message.reply('Voeg tekst toe aan het embed bericht.');
 
-      const embed = new EmbedBuilder()
-        .setDescription(tekst)
-        .setColor(0xff5733)
-        .setTimestamp();
+  const embed = new EmbedBuilder()
+    .setDescription(tekst)
+    .setColor(0xff5733)
+    .setTimestamp();
 
-      await message.channel.send({ embeds: [embed] });
+  await message.channel.send({ embeds: [embed] });
 
-      const logEmbed = new EmbedBuilder()
-        .setTitle('📝 Embed aangemaakt')
-        .addFields({ name: 'Auteur', value: message.author.tag })
-        .setColor(0xff0000)
-        .setTimestamp();
+  // Verwijder het originele bericht
+  await message.delete().catch(err => console.warn('Kon bericht niet verwijderen:', err));
 
-      await logToChannel(message.guild, logEmbed);
-    } 
+  const logEmbed = new EmbedBuilder()
+    .setTitle('📝 Embed aangemaakt')
+    .addFields({ name: 'Auteur', value: message.author.tag })
+    .setColor(0xff0000)
+    .setTimestamp();
+
+  await logToChannel(message.guild, logEmbed);
+} 
 
       else if (command === 'level') {
   const user = message.mentions.users.first() || message.author;
