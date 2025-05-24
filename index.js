@@ -732,7 +732,14 @@ else if (command === 'suggestion') {
     return message.reply('Suggestiekanaal niet gevonden of is geen tekstkanaal.');
   }
 
-  await suggestionChannel.send({ embeds: [embed] });
+  // Stuur de embed naar het suggestiekanaal
+  const suggestionMessage = await suggestionChannel.send({ embeds: [embed] });
+
+  // Voeg automatische reacties toe
+  await suggestionMessage.react('✅');
+  await suggestionMessage.react('❌');
+  await suggestionMessage.react('❓');
+
   await message.reply('✅ Jouw suggestie is verzonden naar het suggestiekanaal!');
 }
 
