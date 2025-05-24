@@ -82,6 +82,7 @@ client.on('guildMemberAdd', async (member) => {
     '**`!add @gebruiker`** – Voeg een gebruiker toe aan het ticket.\n' +
     '**`!remove @gebruiker`** – Verwijder een gebruiker uit de ticket.\n' +
     '**`!level`** – Laat jouw level zien.'+
+    '**`!suggestion [suggestie]`** – Stuur een suggestie.'+
     '**`!coinflip`** – Speel kop of munt.**' +
      '**`!boosters`** – Laat de leden zien die de server hebben geboost.**' +
     '**`!help`** – Toon een lijst met beschikbare commando\'s.\n' +
@@ -715,8 +716,27 @@ else if (command === 'giveaway') {
   }, duration * 1000);
 }
 
+else if (command === 'suggestion') {
+  const suggestionText = args.join(' ');
+  if (!suggestionText) return message.reply('Gebruik: `!suggestion [jouw suggestie]`');
 
-            
+  const embed = new EmbedBuilder()
+    .setTitle('💡 Nieuwe Suggestie')
+    .setDescription(suggestionText)
+    .addFields({ name: 'Ingezonden door', value: message.author.tag })
+    .setColor(0x00bfff)
+    .setTimestamp();
+
+  const suggestionChannel = message.guild.channels.cache.get('1375833571876540509');
+  if (!suggestionChannel || !suggestionChannel.isTextBased()) {
+    return message.reply('Suggestiekanaal niet gevonden of is geen tekstkanaal.');
+  }
+
+  await suggestionChannel.send({ embeds: [embed] });
+  await message.reply('✅ Jouw suggestie is verzonden naar het suggestiekanaal!');
+}
+
+  
 else if (command === 'info') {
   const uptime = process.uptime(); // seconden
   const hours = Math.floor(uptime / 3600);
@@ -761,6 +781,7 @@ else if (command === 'info') {
           { name: '!boosters', value: 'Laat de leden zien die de server hebben geboost.' },
           { name: '!level', value: 'Laat jouw level zien.' },
           { name: '!poll [vraag]', value: 'Start een poll.' },
+          { name: '!suggestion [suggestie]', value: 'Stuur een suggestie.' },
           { name: '!ticket [reden]', value: 'Maak een ticket aan.' },
           { name: '!add', value: 'Voeg een gebruiker toe aan de ticket.' },
           { name: '!remove', value: 'Verwijder een gebruiker uit de ticket.' },
